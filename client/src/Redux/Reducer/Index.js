@@ -18,39 +18,39 @@ const rootReducer = (state = initialState, action) => {
                 pokePage:action.payload,
                 allPoke:[...state.allPoke,action.payload]
             }
-            break;
+            
 
         case allActions.GET_POKENAME:
             return{
                 ...state,
                 pokeDetail:action.payload
             }
-            break;
+            
 
         case allActions.GET_POKEID:
             return{
                 ...state,
                 pokeDetail:action.payload
             }
-            break;
+            
 
         case allActions.GET_TYPES:
             return{
                 ...state,
                 types:[action.payload]
             }
-            break;
+            
 
         case allActions.POST_POKE:
             return{
                 ...state,
                 createdPoke:[...state.createdPoke,action.payload]
             }
-            break;
+            
 
         default:
             return initialState;
-            break;
+            
     }
 }
 

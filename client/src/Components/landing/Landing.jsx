@@ -1,15 +1,27 @@
 import React from "react";
+import { FullImg, PokeParag, Container, StartButton } from "./LandingStyles.js";
+import { Link } from "react-router-dom";
 
-const Landing = ()=>{
+export default function Landing(){
     return(
-        <div className="container">
+        <Container>
             
-            <img src="https://i.pinimg.com/originals/f5/bd/88/f5bd88e0227593c30d22775dc5ceb0e0.jpg" alt="pokedex" />
-            <p>
-                Bienvenidx a la pokedex! 
+            <FullImg src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDNiNjRhY2RmYWRhYzMzNjY3NjUwOTdjOWJiNzM5MzA1N2M0YTkwMSZjdD1n/UnuSuj53NcGyeTosZy/giphy.gif" alt="pokedex" />
+
+            
+
+           
+            <PokeParag>
+                ¡Bienvenidx a la Pokedex! 
+                <br/>
+                <br/>
                 La enciclopedia virtual portátil que todo entrenador Pokémon lleva consigo.
-            </p>
-            <button>Start</button>
-        </div>
+            </PokeParag>
+
+            <Link to="/home">
+            <StartButton>Start</StartButton>
+            </Link>
+
+        </Container>
     )
 }
