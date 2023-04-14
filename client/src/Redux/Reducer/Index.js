@@ -2,10 +2,8 @@ import * as allActions from "../Actions/index"
 
 const initialState = {
     pokePage: [],
-    allPoke:[],
-    //guardar allPoke que van pasando por las paginas. 
-    //Tal vez usarlos para los filtrados o para ahorrar peticiones?
-    pokeDetail: {}, 
+    orderFilterPoke: [],
+    pokeDetail: {},
     createdPoke: [],
     types: []
 }
@@ -13,45 +11,88 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case allActions.GET_POKEPAGE:
-            return{
+            return {
                 ...state,
-                pokePage:action.payload,
-                allPoke:[...state.allPoke,action.payload]
+                pokePage: action.payload,
+                orderFilterPoke: action.payload,
             }
-            
+
 
         case allActions.GET_POKENAME:
-            return{
+            return {
                 ...state,
-                pokeDetail:action.payload
+                pokeDetail: action.payload
             }
-            
+
 
         case allActions.GET_POKEID:
-            return{
+            return {
                 ...state,
-                pokeDetail:action.payload
+                pokeDetail: action.payload
             }
-            
+
 
         case allActions.GET_TYPES:
-            return{
+            return {
                 ...state,
-                types:[action.payload]
+                types: [action.payload]
             }
-            
+
 
         case allActions.POST_POKE:
-            return{
+            return {
                 ...state,
-                createdPoke:[...state.createdPoke,action.payload]
+                createdPoke: [...state.createdPoke, action.payload]
             }
-            
+
+        case allActions.FILTER_TYPE:
+            return {
+                ...state,
+                orderFilterPoke: state.pokePage.filter(
+                    (poke) => {
+                        for (let index = 0; index < poke.types.length; index++) {
+                            const element = poke.types[index].type.name;
+                            if(element === action.payload) return true;                          
+                        }
+                        return false; 
+                    }
+                )
+            }
+
+        case allActions.ORDER_ATT:
+            let AttOrderFunction =
+        action.payload === "menor"
+          ? (a, b) => {
+              return a.ataque > b.ataque ? 1 : -1;
+            }
+          : (a, b) => {
+              return a.ataque < b.ataque ? 1 : -1;
+            };
+      let orderAtt = state.orderFilterPoke.sort(AttOrderFunction);
+      return {
+        ...state,
+        orderFilterPoke: [...orderAtt],
+      };
+
+        case allActions.ORDER_NAM:
+            let NamorderFunction =
+        action.payload === "asc"
+          ? (a, b) => {
+              return a.nombre > b.nombre ? 1 : -1;
+            }
+          : (a, b) => {
+              return a.nombre < b.nombre ? 1 : -1;
+            };
+            let orderNam= state.orderFilterPoke.sort(NamorderFunction)
+            return {
+                ...state,
+                orderFilterPoke: [...orderNam]
+            }
+
 
         default:
             return initialState;
-            
+
     }
 }
-
 export default rootReducer;

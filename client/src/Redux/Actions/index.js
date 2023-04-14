@@ -6,6 +6,9 @@ export const GET_POKENAME = "GET_POKENAME";
 export const GET_POKEID = "GET_POKEID";
 export const POST_POKE = "POST_POKE"
 export const GET_TYPES = "GET_TYPES"
+export const ORDER_ATT = "ORDER_ATT"
+export const ORDER_NAM = "ORDER_NAM"
+export const FILTER_TYPE = "FILTER_TYPE"
 
 export const getPokePage = async (dispatch, query) => {
     try {
@@ -76,6 +79,28 @@ export const postPoke = async (payload, dispatch) => {
     }
 
 }
+
+export function orderAtt(order) {
+    return{
+        type: ORDER_ATT,
+        payload: order
+    }
+}
+
+export function orderNam(order) {
+    return{
+        type: ORDER_NAM,
+        payload: order
+    }
+}
+
+export function filterType(tipo) {
+    return{
+        type: FILTER_TYPE,
+        payload: tipo
+    }
+}
+
 
 
 

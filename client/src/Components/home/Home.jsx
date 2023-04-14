@@ -23,21 +23,45 @@ import { HomeContainer } from "./HomeStyles";
 
 export function Home(props) {
     const [pagina, setpagina] = useState(1);
+    const [filterFlag, setFilterFlag] = useState(false);
+    const [menuFlag, setMenuFlag] = useState(false)
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        getTypes(dispatch);
+    }, []);
 
     const paginadorHandler = (nuevaPag) => {
         setpagina(nuevaPag);
+    };
+
+    const menuFlagHandler = ()=>{
+        setMenuFlag(!menuFlag)
+    }
+
+    const mappingHandler = () => {
+        setFilterFlag(true);
     };
 
     return (
         <div>
             <HomeContainer>
                 <Nav />
-                <Paginador pagina={pagina} pageChange={paginadorHandler} types={props.types}/>
+                <Paginador
+                    mappingHandler={mappingHandler}
+                    pagina={pagina}
+                    pageChange={paginadorHandler}
+                    types={props.types}
+                    menuFlag={menuFlag}
+                   
+                />
                 <PokeCards
                     pagina={pagina}
                     getPokePage={getPokePage}
-                    getTypes={getTypes}
                     pokePage={props.pokePage}
+                    filterFlag={filterFlag}
+                    filterPage={props.orderFilterPoke}
+                    menuFlagHandler={menuFlagHandler}
                 />
             </HomeContainer>
         </div>
@@ -47,9 +71,9 @@ export function Home(props) {
 export const mapStateToProps = (state) => {
     return {
         pokePage: state.pokePage,
-        allPoke: state.allPoke,
         createdPoke: state.createdPoke,
         types: state.types,
+        orderFilterPoke: state.orderFilterPoke,
     };
 };
 

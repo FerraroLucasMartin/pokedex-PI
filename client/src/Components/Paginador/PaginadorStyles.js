@@ -15,8 +15,5 @@ border-radius: 10px;
    padding: 5px;
    font-family: 'Press Start 2P', cursive;
    text-transform: uppercase;
-   max-height: 100px; //para que no se haga una lista larguisima en los tipos.
-  overflow-y: auto;
   font-size: 10px;
-   /* appearance: none; */
 `

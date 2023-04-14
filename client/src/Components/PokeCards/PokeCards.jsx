@@ -11,17 +11,31 @@ import { useDispatch } from "react-redux";
 
 export default function PokeCards (props) {
     const [loading, setloading] = useState(true);
+
     const pagina = props.pagina;
     const { pageArray } = props;
 
     const dispatch = useDispatch();
     useEffect(() => {
         props.getPokePage(dispatch, pagina);
-        props.getTypes(dispatch);
         setloading(false);
+        props.menuFlagHandler()
     }, [pagina]);
 
+    
+
     const cardsMap = props.pokePage.map(function (element) {
+        return (
+            <Card
+                id={element.id}
+                pokeName={element.nombre}
+                pokeImg={element.imagen}
+                types={element.types}
+            />
+        );
+    });
+
+     const filterMap = props.filterPage.map(function (element) {
         return (
             <Card
                 id={element.id}
@@ -44,7 +58,8 @@ export default function PokeCards (props) {
                 </div>
             );
         } else {
-            return <CardsContainer>{cardsMap}</CardsContainer>;
+            if(props.filterFlag) {return <CardsContainer>{filterMap}</CardsContainer>}
+            else return <CardsContainer>{cardsMap}</CardsContainer>;
         }
     }
 };
