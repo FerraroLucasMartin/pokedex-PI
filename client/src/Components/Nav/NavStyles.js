@@ -7,7 +7,7 @@ export const TitleImg = styled.img`
 `
 export const NavDiv = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     padding: 10px 20px;
     background-color: #f44336;
