@@ -2,25 +2,32 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
 display: flex;
+flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 90%;
+  height: 100vh;
 `
 
-export const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
+export const FormContainer = styled.form`
+ display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
   background-color: #f5f5f5;
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
-  width: 400px;
-  /* height: 500px; */ 
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  height: auto;
 `;
+
+export const SubCont= styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 20px;
+`
 
 export const FormTitle = styled.h2`
 font-family: 'Press Start 2P', cursive;
@@ -35,7 +42,6 @@ font-family: 'Press Start 2P', cursive;
   font-size: 16px;
   font-weight: bold;
   color: #333;
-  margin-top: 20px;
   margin-bottom: 10px;
 `;
 
@@ -65,10 +71,13 @@ background-color: #ffcc33;
   color: #000;
   font-family: 'Press Start 2P', cursive;
   font-size: 10px;
-  padding: 10px 20px;
+  padding: 13px;
   text-transform: uppercase;
   text-shadow: 1px 1px #fff;
   transition: all 0.2s ease-in-out;
+  margin-top: 25px;
+  margin-left: 22px;
+  width:100%;
 
   &:hover {
     background-color: #ffdd55;

@@ -3,7 +3,7 @@ const { Pokemon, Tipo } = require("../db.js")
 
 const postPoke = async (req, res) => {
     try {
-        const { newTipos, nombre, altura, peso, imagen, vida, ataque, defensa, velocidad } = req.body
+        const { inputTipo, nombre, altura, peso, imagen, vida, ataque, defensa, velocidad } = req.body
         const newPokemon = Pokemon.build({
             nombre,
             altura,
@@ -12,12 +12,14 @@ const postPoke = async (req, res) => {
             vida,
             ataque,
             defensa,
-            velocidad
+            velocidad,
+            inputTipo
+
         });
 
         const pokeTipo = await Tipo.findAll({
             where: {
-                nombre: newTipos
+                nombre: inputTipo
             }
         });
         newPokemon.setTipos(pokeTipo);
@@ -25,7 +27,7 @@ const postPoke = async (req, res) => {
         console.log("Pokemon Created")
         res.status(200).json({ message: "Success" })
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message:error.message  })
     }
 
 };

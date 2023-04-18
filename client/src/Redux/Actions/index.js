@@ -67,15 +67,17 @@ export const getTypes = async (dispatch) => {
 
 }
 
-export const postPoke = async (payload, dispatch) => {
+export const postPoke = async (dispatch,payload) => {
     try {
-        let res = await axios.post("http://localhost:3001/pokemons", payload)
+        console.log(payload)
+        let {data} = await axios.post("http://localhost:3001/pokemons", payload)
         dispatch({
             type: POST_POKE,
-            payload: res.data
+            payload: data
         })
+        console.log("action success")
     } catch (error) {
-        console.log({ message: error.message })
+        console.log({ message: error })
     }
 
 }
