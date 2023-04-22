@@ -15,6 +15,7 @@ export const Paginador = (props) => {
         TypeFilt: "default",
     });
 
+    //devuelve los valores a default al re-renderizar
     useEffect(() => {
         setMenuValor({
             attOrder: "default",
@@ -25,6 +26,7 @@ export const Paginador = (props) => {
 
     const dispatch = useDispatch();
 
+    //Paginador
     const totalPags = Math.ceil(1279 / 12);
     const pageNumArray = [];
     const paginador = () => {
@@ -39,6 +41,7 @@ export const Paginador = (props) => {
         props.pageChange(queryNum);
     };
 
+//Tipos options del select
     const typesArray = props.types[0] || [];
     const OptionTipos = typesArray.map((element) => {
         return <option value={element.nombre}>{element.nombre}</option>;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
     FormContainer,
@@ -9,11 +9,12 @@ import {
     FormButton,
     Wrapper,
     SubCont,
+    SelectInput,
 } from "./FormStyles";
 import Detail from "../detail/Detail";
 import * as validations from "./validations";
 
-import { postPoke } from "../../Redux/Actions";
+import { postPoke, getTypes } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 
@@ -41,56 +42,71 @@ const Form = (props) => {
         vida: false,
     });
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getTypes(dispatch);
+    }, []);
+
+    const typesArray = props.types[0] || [];
+    const OptionTipos = typesArray.map((element) => {
+        return <option value={element.nombre}>{element.nombre}</option>;
+    });
+
     function handleInputChanges(e) {
         setInputs({ ...inputs, [e.target.name]: e.target.value });
     }
-
-    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         //chequeo si estan vacios.
+
         for (const key in inputs) {
             const element = inputs[key];
-            if (!element || element < 0) {
-                setErrorFlag({ ...errorFlag, [errorFlag.key]: true });
-                console.log(key + "is empty")
+            if (element === "" || element === 0) {
+                setErrorFlag((prevState) => ({ ...prevState, [key]: "empty" }));
+                console.log("entra");
             }
         }
 
         if (inputs.nombre) {
+            console.log(inputs.nombre)
             const pattern = /^[a-zA-Z]+$/;
             const isValidChar = pattern.test(inputs.nombre); //.test metodo para probar regex
             const isValidLength = inputs.nombre.length <= 11;
             if (!isValidChar || isValidLength) {
-                setErrorFlag({
-                    ...errorFlag,
-                    [errorFlag.nombre]: true,
-                });
+                setErrorFlag(prevState => ({
+                    ...prevState,
+                    nombre: true,
+                }));
                 console.log("nombre is failing");
-                return null;
+
             }
         }
         if (inputs.inputTipo) {
-            const isValidType = props.types.indexOf(inputs.inputTipo)>= 0;
+            const isValidType = props.types.indexOf(inputs.inputTipo) >= 0;
             if (isValidType < 0) {
-                setErrorFlag({
-                    ...errorFlag,
-                    [errorFlag[inputs.inputTipo]]: true,
-                });
+                setErrorFlag(prevState=>({
+                    ...prevState,
+                    inputTipo: true,
+                }));
                 console.log("Tipo is failing");
-                return null;
+            }else{
+                setErrorFlag(prevState=>({
+                    ...prevState,
+                    inputTipo: false,
+                }));
             }
         }
         if (inputs.imagen) {
             const pattern = /^(ftp|http|https):\/\/[^ "]+$/;
             const isValidUrl = pattern.test(inputs.imagen);
             if (!isValidUrl) {
-                setErrorFlag({
-                    ...errorFlag,
-                    [errorFlag.imagen]: true,
-                });
+                setErrorFlag(prevState=>({
+                    ...prevState,
+                    imagen: true,
+                }));
                 console.log("imagen is failing");
             }
         }
@@ -98,41 +114,40 @@ const Form = (props) => {
         for (const key in inputs) {
             const element = inputs[key];
             if (
-                key === "ataque" ||
-                "defensa" ||
-                "altura" ||
-                "peso" ||
-                "velocidad" ||
-                "vida"
+                key !== "nombre" && key !=="inputTipo" && key !=="imagen"
             ) {
                 let pattern = /^\d+$/;
                 let isValidChar = pattern.test(element);
                 let moreThanValid = element < 500;
                 if (!isValidChar || !moreThanValid) {
-                    setErrorFlag({ ...errorFlag, [key]: true });
-                    console.log(key + "is failing");
+                    setErrorFlag(prevState=>({ ...prevState, [key]: true }));
+                    console.log(key + " is failing");
                 }
             }
         }
 
         for (const key in errorFlag) {
             const element = errorFlag[key];
-            if (element === true) return null;
+            console.log(element)
+            if (element === true ||element === "empty" ) {
+            console.log("hay un error aborting");
+            return null;
+            }
         }
 
-        postPoke(dispatch, inputs);
-        setInputs({
-            nombre: "",
-            inputTipo: "",
-            ataque: 0,
-            defensa: 0,
-            altura: 0,
-            peso: 0,
-            velocidad: 0,
-            vida: 0,
-            imagen: "",
-        });
-        alert("Pokemon Succesfully Created");
+        //     postPoke(dispatch, inputs);
+        //     setInputs({
+        //         nombre: "",
+        //         inputTipo: "",
+        //         ataque: 0,
+        //         defensa: 0,
+        //         altura: 0,
+        //         peso: 0,
+        //         velocidad: 0,
+        //         vida: 0,
+        //         imagen: "",
+        //     });
+        alert("final");
     };
 
     return (
@@ -151,12 +166,23 @@ const Form = (props) => {
 
                     <br />
                     <FormLabel htmlFor="">Tipo: </FormLabel>
-                    <FormInput
+                    {/* <FormInput
                         type="text"
                         value={inputs.inputTipo}
                         name="inputTipo"
                         onChange={handleInputChanges}
-                    />
+                    /> */}
+
+                    <SelectInput
+                        name="inputTipo"
+                        value={inputs.inputTipo}
+                        onChange={handleInputChanges}
+                    >
+                        <option value="default" disabled defaultValue selected hidden>
+                            Select Tipo
+                        </option>
+                        {OptionTipos}
+                    </SelectInput>
                     {/* { inputs.pais.length > 30 && <p>Nombre u Pais demasiado largo</p>} */}
                     <br />
                     <FormLabel htmlFor="">Imagen URL: </FormLabel>
@@ -229,4 +255,8 @@ export const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, null)(Form);
+export const mapDispatchToProps = {
+    getTypes,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

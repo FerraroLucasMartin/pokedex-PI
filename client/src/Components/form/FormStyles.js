@@ -64,6 +64,25 @@ export const FormInput = styled.input`
   }
 `;
 
+export const SelectInput = styled.select`
+  padding: 10px 20px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  font-family: 'Press Start 2P', cursive;
+  width:100%;
+  font-size: 10px;
+  line-height: 15px; //Porque se le cortaban los pixeles de arriba a las letras.
+  text-transform: uppercase; //lo subo todo a caps para seguir estetica.
+  transition: all 0.2s ease-in-out; //estilo suave al focus...
+  margin-right: 10px;
+ 
+
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px 2px #ffcc33;
+  }
+`;
+
 export const FormButton = styled.button`
 background-color: #ffcc33;
   border: 1px solid #000;
