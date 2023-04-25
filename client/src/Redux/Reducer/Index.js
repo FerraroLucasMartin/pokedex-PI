@@ -52,38 +52,57 @@ const rootReducer = (state = initialState, action) => {
                     (poke) => {
                         for (let index = 0; index < poke.types.length; index++) {
                             const element = poke.types[index].type.name;
-                            if(element === action.payload) return true;                          
+                            if (element === action.payload) return true;
                         }
-                        return false; 
+                        return false;
                     }
                 )
             }
 
+        case allActions.FILTER_ORIGIN:
+            console.log("llega hasta aca")
+
+            if (action.payload === "database") {
+               
+                return {
+                    ...state,
+                    orderFilterPoke: [...state.createdPoke]
+                }
+            }
+            else {
+                return {
+                    ...state,
+                    orderFilterPoke: [...state.pokePage]
+                }
+            }
+
+
+
         case allActions.ORDER_ATT:
             let AttOrderFunction =
-        action.payload === "menor"
-          ? (a, b) => {
-              return a.ataque > b.ataque ? 1 : -1;
-            }
-          : (a, b) => {
-              return a.ataque < b.ataque ? 1 : -1;
+                action.payload === "menor"
+                    ? (a, b) => {
+                        return a.ataque > b.ataque ? 1 : -1;
+                    }
+                    : (a, b) => {
+                        return a.ataque < b.ataque ? 1 : -1;
+                    };
+            let orderAtt = state.orderFilterPoke.sort(AttOrderFunction);
+            return {
+                ...state,
+                orderFilterPoke: [...orderAtt],
             };
-      let orderAtt = state.orderFilterPoke.sort(AttOrderFunction);
-      return {
-        ...state,
-        orderFilterPoke: [...orderAtt],
-      };
 
         case allActions.ORDER_NAM:
             let NamorderFunction =
-        action.payload === "asc"
-          ? (a, b) => {
-              return a.nombre > b.nombre ? 1 : -1;
-            }
-          : (a, b) => {
-              return a.nombre < b.nombre ? 1 : -1;
-            };
-            let orderNam= state.orderFilterPoke.sort(NamorderFunction)
+                action.payload === "asc"
+                    ? (a, b) => {
+                        return a.nombre > b.nombre ? 1 : -1;
+                    }
+                    : (a, b) => {
+                        return a.nombre < b.nombre ? 1 : -1;
+                    };
+            let orderNam = state.orderFilterPoke.sort(NamorderFunction)
             return {
                 ...state,
                 orderFilterPoke: [...orderNam]

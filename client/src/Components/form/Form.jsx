@@ -11,18 +11,21 @@ import {
     SubCont,
     SelectInput,
 } from "./FormStyles";
+import { SearchButton as BackButton } from "../SearchBar/SBStyles";
+
 import Detail from "../detail/Detail";
 import * as validations from "./validations";
 
 import { postPoke, getTypes } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
+import {Link} from "react-router-dom"
 
 const Form = (props) => {
-    const [inputs, setInputs] = useState({
+     const [inputs, setInputs] = useState({
         nombre: "",
         imagen: "",
-        inputTipo: "",
+        types: [],
         ataque: 0,
         defensa: 0,
         altura: 0,
@@ -33,7 +36,7 @@ const Form = (props) => {
     const [errorFlag, setErrorFlag] = useState({
         nombre: false,
         imagen: false,
-        inputTipo: false,
+        types: false,
         ataque: false,
         defensa: false,
         altura: false,
@@ -64,18 +67,20 @@ const Form = (props) => {
 
         for (const key in inputs) {
             const element = inputs[key];
-            if (element === "" || element === 0) {
+            if (element === "" || element === 0 ||element === []) {
                 setErrorFlag((prevState) => ({ ...prevState, [key]: "empty" }));
-                console.log("entra");
             }
         }
+
+        //validaciones
 
         if (inputs.nombre) {
             console.log(inputs.nombre)
             const pattern = /^[a-zA-Z]+$/;
             const isValidChar = pattern.test(inputs.nombre); //.test metodo para probar regex
-            const isValidLength = inputs.nombre.length <= 11;
-            if (!isValidChar || isValidLength) {
+            console.log(isValidChar)
+            const isValidLength = inputs.nombre.length <= 20;
+            if (!isValidChar || !isValidLength) {
                 setErrorFlag(prevState => ({
                     ...prevState,
                     nombre: true,
@@ -84,18 +89,18 @@ const Form = (props) => {
 
             }
         }
-        if (inputs.inputTipo) {
-            const isValidType = props.types.indexOf(inputs.inputTipo) >= 0;
+        if (inputs.types) {
+            const isValidType = props.types.indexOf(inputs.types) >= 0;
             if (isValidType < 0) {
                 setErrorFlag(prevState=>({
                     ...prevState,
-                    inputTipo: true,
+                    types: true,
                 }));
                 console.log("Tipo is failing");
             }else{
                 setErrorFlag(prevState=>({
                     ...prevState,
-                    inputTipo: false,
+                    types: false,
                 }));
             }
         }
@@ -114,7 +119,7 @@ const Form = (props) => {
         for (const key in inputs) {
             const element = inputs[key];
             if (
-                key !== "nombre" && key !=="inputTipo" && key !=="imagen"
+                key !== "nombre" && key !=="types" && key !=="imagen"
             ) {
                 let pattern = /^\d+$/;
                 let isValidChar = pattern.test(element);
@@ -126,33 +131,32 @@ const Form = (props) => {
             }
         }
 
+        //¿Hay error?
         for (const key in errorFlag) {
             const element = errorFlag[key];
-            console.log(element)
             if (element === true ||element === "empty" ) {
-            console.log("hay un error aborting");
+            console.log("Hay un error aborting");
             return null;
             }
         }
 
-        //     postPoke(dispatch, inputs);
-        //     setInputs({
-        //         nombre: "",
-        //         inputTipo: "",
-        //         ataque: 0,
-        //         defensa: 0,
-        //         altura: 0,
-        //         peso: 0,
-        //         velocidad: 0,
-        //         vida: 0,
-        //         imagen: "",
-        //     });
-        alert("final");
+            postPoke(dispatch, inputs);
+            setInputs({
+                nombre: "",
+                types: [],
+                ataque: 0,
+                defensa: 0,
+                altura: 0,
+                peso: 0,
+                velocidad: 0,
+                vida: 0,
+                imagen: "",
+            });
+        alert("El pokemon ha sido creado con exito!");
     };
 
-    return (
+    return (<>
         <Wrapper>
-            {/* <FormTitle>Crea tu Pokemon</FormTitle> */}
             <FormContainer action="" onSubmit={handleSubmit}>
                 <SubCont>
                     <FormLabel htmlFor="">Nombre: </FormLabel>
@@ -162,20 +166,20 @@ const Form = (props) => {
                         name="nombre"
                         onChange={handleInputChanges}
                     />
-                    {/* { inputs.name.length > 12 && <p>Nombre demasiado Largo</p>} */}
+                    {validations.nameValidator(errorFlag)}
 
                     <br />
                     <FormLabel htmlFor="">Tipo: </FormLabel>
                     {/* <FormInput
                         type="text"
-                        value={inputs.inputTipo}
-                        name="inputTipo"
+                        value={inputs.types}
+                        name="types"
                         onChange={handleInputChanges}
                     /> */}
 
                     <SelectInput
-                        name="inputTipo"
-                        value={inputs.inputTipo}
+                        name="types"
+                        value={[inputs.types]}
                         onChange={handleInputChanges}
                     >
                         <option value="default" disabled defaultValue selected hidden>
@@ -183,7 +187,7 @@ const Form = (props) => {
                         </option>
                         {OptionTipos}
                     </SelectInput>
-                    {/* { inputs.pais.length > 30 && <p>Nombre u Pais demasiado largo</p>} */}
+                    {validations.tipeValidator(errorFlag)}
                     <br />
                     <FormLabel htmlFor="">Imagen URL: </FormLabel>
                     <FormInput
@@ -192,6 +196,7 @@ const Form = (props) => {
                         name="imagen"
                         onChange={handleInputChanges}
                     />
+                    {validations.urlValidator(errorFlag)}
                     <br />
                     <FormLabel htmlFor="">Vida: </FormLabel>
                     <FormInput
@@ -200,6 +205,7 @@ const Form = (props) => {
                         name="vida"
                         onChange={handleInputChanges}
                     />
+                    {validations.numberValidator(errorFlag,"vida")}
                     <br />
                     <FormLabel htmlFor="">Velocidad: </FormLabel>
                     <FormInput
@@ -208,6 +214,7 @@ const Form = (props) => {
                         name="velocidad"
                         onChange={handleInputChanges}
                     />
+                    {validations.numberValidator(errorFlag,"velocidad")}
                 </SubCont>
                 <SubCont>
                     <FormLabel htmlFor="">Ataque: </FormLabel>
@@ -217,6 +224,7 @@ const Form = (props) => {
                         name="ataque"
                         onChange={handleInputChanges}
                     />
+                    {validations.numberValidator(errorFlag,"ataque")}
                     <br />
                     <FormLabel htmlFor="">Defensa: </FormLabel>
                     <FormInput
@@ -225,6 +233,7 @@ const Form = (props) => {
                         value={inputs.defensa}
                         onChange={handleInputChanges}
                     ></FormInput>
+                    {validations.numberValidator(errorFlag,"defensa")}
                     <br />
                     <FormLabel htmlFor="">Altura: </FormLabel>
                     <FormInput
@@ -233,7 +242,7 @@ const Form = (props) => {
                         name="altura"
                         onChange={handleInputChanges}
                     />
-                    {/* {inputs.numeroCamiseta < 0 && <p>El numero de camiseta tiene que ser mayor a 0</p>} */}
+                    {validations.numberValidator(errorFlag,"altura")}
                     <br />
                     <FormLabel htmlFor="">Peso: </FormLabel>
                     <FormInput
@@ -242,11 +251,15 @@ const Form = (props) => {
                         name="peso"
                         onChange={handleInputChanges}
                     />
+                    {validations.numberValidator(errorFlag,"peso")}
                     <br />
                     <FormButton type="submit">Crear Pokemon</FormButton>
                 </SubCont>
             </FormContainer>
+            <Link to="/Home"><BackButton>Back Home</BackButton></Link>
         </Wrapper>
+        
+        </>
     );
 };
 export const mapStateToProps = (state) => {

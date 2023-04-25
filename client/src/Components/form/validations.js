@@ -1,30 +1,27 @@
+import styled from "styled-components"
+
+const ErrorMsg= styled.p`
+margin-top: 1%;
+margin-bottom: -4%;
+color: red;
+`
+
 export const nameValidator = (errorFlag) =>{
-if (errorFlag.nombre ==="empty") return <p>Campo obligatorio.</p>
-if (errorFlag.nombre ===false) return <p>Nombre Invalido. No se permiten caracteres especiales o numericos.</p>
+if (errorFlag.nombre ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
+if (errorFlag.nombre ===true) return <ErrorMsg> No se permiten caracteres especiales o numericos.</ErrorMsg>
 }
 
 export const urlValidator= (errorFlag)=>{
-    if (errorFlag.imagen ==="empty") return <p>Campo obligatorio.</p>
-    if (errorFlag.imagen ===false) return <p>Url Invalida.</p>
+    if (errorFlag.imagen ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
+    if (errorFlag.imagen ===true) return <ErrorMsg>Url Invalida.</ErrorMsg>
 }
 
 export const tipeValidator= (errorFlag)=>{
-    if (errorFlag.inputTipo ==="empty") return <p>Campo obligatorio.</p>
-    if (errorFlag.inputTipo ===false) return <p>Tipo Invalido.</p>
+    if (errorFlag.inputTipo ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
+    if (errorFlag.inputTipo ===true) return <ErrorMsg>Tipo Invalido.</ErrorMsg>
 }
 
-export const numberValidator = (event,flag,flagFunct)=>{
-    const input = event.target.value;
-    if (input <=0 ) {
-        flagFunct({...flag, [flag.inputName]: true})
-        return null 
-    }
-    const inputName= event.target.name
-    const pattern = /^\d+$/;
-    const isValidChar= pattern.test(input);
-    const moreThanValid = input < 500
-if (!isValidChar || !moreThanValid) {
-    flagFunct({...flag, [flag.inputName]: true})
-    return null 
-}
+export const numberValidator = (errorFlag,input)=>{
+    if (errorFlag[input] ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
+    if (errorFlag[input] ===true) return <ErrorMsg>Coloca un valor entre 1 y 500</ErrorMsg>
 }

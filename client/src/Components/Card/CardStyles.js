@@ -12,6 +12,12 @@ export const CardDiv = styled.div`
   margin: 20px;
   width: 135px;
   height: 1%;
+  transition: transform 0.2s ease-in-out;
+
+&:hover {
+  transform: scale(0.95);
+  cursor: pointer;
+}
 `;
 
 export const Image = styled.img`

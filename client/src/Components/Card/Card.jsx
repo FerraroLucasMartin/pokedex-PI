@@ -1,22 +1,27 @@
-import React from 'react'
-import { CardDiv, TypesContainer,Type, Name, Image } from './CardStyles'
+import React from "react";
+import { CardDiv, TypesContainer, Type, Name, Image } from "./CardStyles";
 
-export const Card = ({pokeName, pokeImg, types}) => {
-  const mayusPokeName = pokeName.charAt(0).toUpperCase() + pokeName.slice(1);
-  
-  const typesMap = types.map((element)=>{
-    return(
-      <Type type={element.type.name} >{element.type.name.charAt(0).toUpperCase() + element.type.name.slice(1)}</Type>
-    )
-  })
+export const Card = ({ pokeName, pokeImg, types, onSearch }) => {
+    const mayusPokeName = pokeName.charAt(0).toUpperCase() + pokeName.slice(1);
 
-  return (
-    <CardDiv>
-        <Image src= {pokeImg} alt="" />
-        <Name>{mayusPokeName}</Name>
-        <TypesContainer >
-       {typesMap}
-        </TypesContainer>
-    </CardDiv>
-  )
-}
+    const typesMap = () => {
+        if (Array.isArray(types)) {
+            const mapeo = types.map((element) => {
+                return (
+                    <Type type={element.type.name}>
+                        {element.type.name.charAt(0).toUpperCase() +
+                            element.type.name.slice(1)}
+                    </Type>
+                );
+            });
+        }else return <Type type={types}>{types}</Type>;
+    };
+
+    return (
+        <CardDiv onClick={() => onSearch(pokeName)}>
+            <Image src={pokeImg} alt="" />
+            <Name>{mayusPokeName}</Name>
+            <TypesContainer>{typesMap()}</TypesContainer>
+        </CardDiv>
+    );
+};

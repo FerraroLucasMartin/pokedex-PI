@@ -47,8 +47,12 @@ export function Home(props) {
         setMenuFlag(!menuFlag);
     };
 
-    const mappingHandler = () => {
+    const mappingFiltersHandler = () => {
         setFilterFlag(true);
+    };
+
+    const backHandler = () => {
+        setSearchFlag(false);
     };
 
     async function onSearch(poke) {
@@ -85,16 +89,25 @@ export function Home(props) {
     }
 
     function conditionalRendering() {
-        if (searchFlag) return <Detail poke={searchData}/>;
+        if (searchFlag) return <Detail poke={searchData} backHandler={backHandler}/>;
         else {
-            return <PokeCards
+            return (<>     <Paginador
+                mappingFiltersHandler={mappingFiltersHandler}
                 pagina={pagina}
-                getPokePage={getPokePage}
-                pokePage={props.pokePage}
-                filterFlag={filterFlag}
-                filterPage={props.orderFilterPoke}
-                menuFlagHandler={menuFlagHandler}
-            />;
+                pageChange={paginadorHandler}
+                types={props.types}
+                menuFlag={menuFlag}
+            />
+                <PokeCards
+                    pagina={pagina}
+                    getPokePage={getPokePage}
+                    pokePage={props.pokePage}
+                    filterFlag={filterFlag}
+                    filterPage={props.orderFilterPoke}
+                    menuFlagHandler={menuFlagHandler}
+                    onSearch={onSearch}
+                />;
+            </>)
         }
     }
 
@@ -102,13 +115,7 @@ export function Home(props) {
         <div>
             <HomeContainer>
                 <Nav onSearch={onSearch} />
-                <Paginador
-                    mappingHandler={mappingHandler}
-                    pagina={pagina}
-                    pageChange={paginadorHandler}
-                    types={props.types}
-                    menuFlag={menuFlag}
-                />
+               
 
                 {conditionalRendering()}
             </HomeContainer>

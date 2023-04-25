@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
 display: flex;
 flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   height: 100vh;
 `
@@ -28,14 +28,6 @@ export const SubCont= styled.div`
   justify-content: space-between;
   margin: 0 20px;
 `
-
-export const FormTitle = styled.h2`
-font-family: 'Press Start 2P', cursive;
-  font-size: 24px;
-  font-weight: bold;
-  color: #e84393;
-  margin-bottom: 30px;
-`;
 
 export const FormLabel = styled.label`
 font-family: 'Press Start 2P', cursive;

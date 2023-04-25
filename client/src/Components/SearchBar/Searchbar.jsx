@@ -5,12 +5,9 @@ import { SearchButton, SearchInput } from "./SBStyles";
 
 export const Searchbar = (props) => {
   const [searchValue, setSearchValue] = useState("");
-  
-  function searchHandler(){
-
-  }
 
   function inputChangeHandler(event) {
+    const searchInput = event.target.value.toLowerCase()
     setSearchValue(event.target.value);
   }
 

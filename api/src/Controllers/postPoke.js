@@ -3,7 +3,7 @@ const { Pokemon, Tipo } = require("../db.js")
 
 const postPoke = async (req, res) => {
     try {
-        const { inputTipo, nombre, altura, peso, imagen, vida, ataque, defensa, velocidad } = req.body
+        const { types, nombre, altura, peso, imagen, vida, ataque, defensa, velocidad } = req.body
         const newPokemon = Pokemon.build({
             nombre,
             altura,
@@ -13,13 +13,13 @@ const postPoke = async (req, res) => {
             ataque,
             defensa,
             velocidad,
-            inputTipo
+            types
 
         });
 
         const pokeTipo = await Tipo.findAll({
             where: {
-                nombre: inputTipo
+                nombre: types
             }
         });
         newPokemon.setTipos(pokeTipo);

@@ -9,6 +9,7 @@ export const GET_TYPES = "GET_TYPES"
 export const ORDER_ATT = "ORDER_ATT"
 export const ORDER_NAM = "ORDER_NAM"
 export const FILTER_TYPE = "FILTER_TYPE"
+export const FILTER_ORIGIN = "FILTER_ORIGIN"
 
 export const getPokePage = async (dispatch, query) => {
     try {
@@ -67,15 +68,16 @@ export const getTypes = async (dispatch) => {
 
 }
 
-export const postPoke = async (dispatch,payload) => {
+export const postPoke = async (dispatch, payload) => {
     try {
         console.log(payload)
-        let {data} = await axios.post("http://localhost:3001/pokemons", payload)
+        let { data } = await axios.post("http://localhost:3001/pokemons", payload)
+        console.log(data)
         dispatch({
             type: POST_POKE,
-            payload: data
+            payload: payload
         })
-        console.log("action success")
+
     } catch (error) {
         console.log({ message: error })
     }
@@ -83,25 +85,35 @@ export const postPoke = async (dispatch,payload) => {
 }
 
 export function orderAtt(order) {
-    return{
+    return {
         type: ORDER_ATT,
         payload: order
     }
 }
 
 export function orderNam(order) {
-    return{
+    return {
         type: ORDER_NAM,
         payload: order
     }
 }
 
 export function filterType(tipo) {
-    return{
+    return {
         type: FILTER_TYPE,
         payload: tipo
     }
 }
+
+export function filterOrigin(origin) {
+    console.log("Entra a la action")
+    return {
+        type: FILTER_ORIGIN,
+        payload: origin
+    }
+
+}
+
 
 
 

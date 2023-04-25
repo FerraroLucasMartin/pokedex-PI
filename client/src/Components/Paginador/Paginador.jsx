@@ -5,7 +5,7 @@ import { SearchButton } from "../SearchBar/SBStyles";
 import { Container, Selector } from "./PaginadorStyles";
 
 import { useDispatch } from "react-redux";
-import { filterType } from "../../Redux/Actions";
+import { filterType, filterOrigin } from "../../Redux/Actions";
 import { orderAtt, orderNam } from "../../Redux/Actions";
 
 export const Paginador = (props) => {
@@ -13,6 +13,7 @@ export const Paginador = (props) => {
         attOrder: "default",
         alfOrder: "default",
         TypeFilt: "default",
+        origin: "default",
     });
 
     //devuelve los valores a default al re-renderizar
@@ -21,6 +22,7 @@ export const Paginador = (props) => {
             attOrder: "default",
             alfOrder: "default",
             TypeFilt: "default",
+            origin: "default",
         });
     }, [props.menuFlag]);
 
@@ -36,12 +38,12 @@ export const Paginador = (props) => {
     };
     paginador();
 
-    const selectHandler = (event) => {
+    const selectPageHandler = (event) => {
         const queryNum = event.target.value;
         props.pageChange(queryNum);
     };
 
-//Tipos options del select
+    //Tipos options del select
     const typesArray = props.types[0] || [];
     const OptionTipos = typesArray.map((element) => {
         return <option value={element.nombre}>{element.nombre}</option>;
@@ -49,18 +51,31 @@ export const Paginador = (props) => {
 
     const filterHandler = (event) => {
         console.log(event.target.value);
+        const filtro = event.target.name;
+        if (filtro === "tipo") {
+            setMenuValor({
+                ...menuValor,
+                TypeFilt: event.target.value,
+            });
 
-        setMenuValor({
-            ...menuValor,
-            TypeFilt: event.target.value,
-        });
+            props.mappingFiltersHandler();
+            return dispatch(filterType(event.target.value));
+        }
 
-        props.mappingHandler();
-        return dispatch(filterType(event.target.value));
+        if (filtro === "origin") {
+            setMenuValor({
+                ...menuValor,
+                origin: event.target.value,
+            });
+
+            props.mappingFiltersHandler();
+            console.log("llega hasta el return del handler")
+            return dispatch(filterOrigin(event.target.value));
+        }
     };
 
     const orderHandler = (event) => {
-        props.mappingHandler();
+        props.mappingFiltersHandler();
         if (event.target.name === "Alfabetico") {
             setMenuValor({
                 ...menuValor,
@@ -79,11 +94,15 @@ export const Paginador = (props) => {
 
     return (
         <Container>
-            <Selector name="paginas"  onClick={selectHandler}>
+            <Selector name="paginas" onClick={selectPageHandler}>
                 {pageNumArray}
             </Selector>
 
-            <Selector name="Ataque" value={menuValor.attOrder} onChange={orderHandler}>
+            <Selector
+                name="Ataque"
+                value={menuValor.attOrder}
+                onChange={orderHandler}
+            >
                 <option value="default" disabled selected hidden>
                     Orden x Ataque
                 </option>
@@ -91,7 +110,11 @@ export const Paginador = (props) => {
                 <option value="menor">Menor Ataque</option>
             </Selector>
 
-            <Selector name="Alfabetico" value={menuValor.alfOrder} onChange={orderHandler}>
+            <Selector
+                name="Alfabetico"
+                value={menuValor.alfOrder}
+                onChange={orderHandler}
+            >
                 <option value="default" disabled selected hidden>
                     {" "}
                     Orden Alfabetico
@@ -100,11 +123,26 @@ export const Paginador = (props) => {
                 <option value="des">Z,Y,X...</option>
             </Selector>
 
-            <Selector name="Tipo" value={menuValor.TypeFilt} onChange={filterHandler}>
+            <Selector
+                name="tipo"
+                value={menuValor.TypeFilt}
+                onChange={filterHandler}
+            >
                 <option value="default" disabled selected hidden>
                     Tipos
                 </option>
                 {OptionTipos}
+            </Selector>
+            <Selector
+                name="origin"
+                value={menuValor.origin}
+                onChange={filterHandler}
+            >
+                <option value="default" disabled selected hidden>
+                    Filtrar x Origen
+                </option>
+                <option value="api">API</option>
+                <option value="database">DB</option>
             </Selector>
         </Container>
     );

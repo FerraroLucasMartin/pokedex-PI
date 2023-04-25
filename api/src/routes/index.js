@@ -3,7 +3,8 @@ const { getPoke } = require("../Controllers/getPoke.js");
 const { getPokeId } = require("../Controllers/getPokeId.js");
 const { getTypes } = require("../Controllers/getTypes.js");
 const { postPoke } = require("../Controllers/postPoke.js");
-const {filteredType} = require("../Controllers/filteredGet.js")
+const {filteredType} = require("../Controllers/filteredGet.js");
+
 // const {getPokeName} = require("../Controllers/getPokeName.js")
 
 // Importar todos los routers;
@@ -18,7 +19,7 @@ router.get("/pokemons",getPoke);
 router.get("/pokemons/:idPokemon",getPokeId);
 // router.get("/pokemons/name",getPokeName)
 router.post("/pokemons", postPoke);
-router.get("/types", getTypes);
+router.get("/types", getTypes);"/db",
 router.get("/types/:idType", filteredType );
 
 

@@ -31,6 +31,7 @@ export default function PokeCards (props) {
                 pokeName={element.nombre}
                 pokeImg={element.imagen}
                 types={element.types}
+                onSearch={props.onSearch}
             />
         );
     });
@@ -42,6 +43,7 @@ export default function PokeCards (props) {
                 pokeName={element.nombre}
                 pokeImg={element.imagen}
                 types={element.types}
+                onSearch={props.onSearch}
             />
         );
     });
