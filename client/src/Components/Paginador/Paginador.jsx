@@ -1,12 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { SearchButton } from "../SearchBar/SBStyles";
+import { SearchButton as ResetButton } from "../SearchBar/SBStyles";
 import { Container, Selector } from "./PaginadorStyles";
 
 import { useDispatch } from "react-redux";
 import { filterType, filterOrigin } from "../../Redux/Actions";
-import { orderAtt, orderNam } from "../../Redux/Actions";
+import { orderAtt, orderNam, resetFilters } from "../../Redux/Actions";
 
 export const Paginador = (props) => {
     const [menuValor, setMenuValor] = useState({
@@ -69,7 +69,7 @@ export const Paginador = (props) => {
             });
 
             props.mappingFiltersHandler();
-            console.log("llega hasta el return del handler")
+            console.log("llega hasta el return del handler");
             return dispatch(filterOrigin(event.target.value));
         }
     };
@@ -144,6 +144,20 @@ export const Paginador = (props) => {
                 <option value="api">API</option>
                 <option value="database">DB</option>
             </Selector>
+
+            <ResetButton
+                onClick={() => {
+                    setMenuValor({
+                        attOrder: "default",
+                        alfOrder: "default",
+                        TypeFilt: "default",
+                        origin: "default",
+                    });
+                    dispatch(resetFilters());
+                }}
+            >
+                Reset Filters
+            </ResetButton>
         </Container>
     );
 };

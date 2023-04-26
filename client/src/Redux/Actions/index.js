@@ -10,6 +10,8 @@ export const ORDER_ATT = "ORDER_ATT"
 export const ORDER_NAM = "ORDER_NAM"
 export const FILTER_TYPE = "FILTER_TYPE"
 export const FILTER_ORIGIN = "FILTER_ORIGIN"
+export const RESET_FILTER = "RESET_FILTER"
+
 
 export const getPokePage = async (dispatch, query) => {
     try {
@@ -112,6 +114,12 @@ export function filterOrigin(origin) {
         payload: origin
     }
 
+}
+
+export function resetFilters(){
+    return{
+        type: RESET_FILTER
+    }
 }
 
 

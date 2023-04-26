@@ -108,6 +108,11 @@ const rootReducer = (state = initialState, action) => {
                 orderFilterPoke: [...orderNam]
             }
 
+            case allActions.RESET_FILTER:
+            return {
+                ...state,
+                orderFilterPoke: [...state.pokePage]
+            }
 
         default:
             return initialState;

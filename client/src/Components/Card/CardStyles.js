@@ -45,7 +45,7 @@ export const Type = styled.span`
         return 'blue';
       case 'grass':
         return 'green';
-      // add more cases for other types
+      // agregar mas colores y casos.
       default:
         return 'gray';
     }
