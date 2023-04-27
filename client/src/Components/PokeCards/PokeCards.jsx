@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 // import { connect } from "react-redux";
 // import { getPokePage, getTypes } from "../../Redux/Actions";
 
-export default function PokeCards (props) {
+
+export default function PokeCards(props) {
     const [loading, setloading] = useState(true);
 
     const pagina = props.pagina;
@@ -17,12 +18,9 @@ export default function PokeCards (props) {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        props.getPokePage(dispatch, pagina);
-        setloading(false);
-        props.menuFlagHandler()
+        props.getPokePage(dispatch, pagina).then(() => setloading(false));
+        props.menuFlagHandler();
     }, [pagina]);
-
-    
 
     const cardsMap = props.pokePage.map(function (element) {
         return (
@@ -36,7 +34,7 @@ export default function PokeCards (props) {
         );
     });
 
-     const filterMap = props.filterPage.map(function (element) {
+    const filterMap = props.filterPage.map(function (element) {
         return (
             <Card
                 id={element.id}
@@ -48,20 +46,36 @@ export default function PokeCards (props) {
         );
     });
 
+    function Loading(){ return (
+        <div>
+            <img
+                src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
+                alt="Loading..."
+            />
+            <h3>Loading...</h3>
+        </div>
+    );
+    
+ 
+
+    }
+
     {
         if (loading) {
             return (
-                <div>
-                    <img
-                        src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
-                        alt="Loading..."
-                    />
-                    <h3>Loading...</h3>
-                </div>
+                Loading()
+            //     <div>
+            //         <img
+            //             src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
+            //             alt="Loading..."
+            //         />
+            //         <h3>Loading...</h3>
+            //     </div>
             );
         } else {
-            if(props.filterFlag) {return <CardsContainer>{filterMap}</CardsContainer>}
-            else return <CardsContainer>{cardsMap}</CardsContainer>;
+            if (props.filterFlag) {
+                return <CardsContainer>{filterMap}</CardsContainer>;
+            } else return <CardsContainer>{cardsMap}</CardsContainer>;
         }
     }
-};
+}

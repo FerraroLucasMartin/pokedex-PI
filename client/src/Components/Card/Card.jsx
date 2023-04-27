@@ -17,8 +17,10 @@ export const Card = ({ pokeName, pokeImg, types, onSearch }) => {
         }else return <Type type={types}>{types}</Type>;
     };
 
+
+
     return (
-        <CardDiv onClick={() => onSearch(pokeName)}>
+        <CardDiv onClick={() => onSearch(pokeName,true)}>
             <Image src={pokeImg} alt="" />
             <Name>{mayusPokeName}</Name>
             <TypesContainer>{typesMap()}</TypesContainer>

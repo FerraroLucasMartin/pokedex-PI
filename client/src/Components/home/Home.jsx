@@ -52,21 +52,28 @@ export function Home(props) {
     };
 
     const backHandler = () => {
+        setSearchData({});
         setSearchFlag(false);
     };
 
-    async function onSearch(poke) {
-        setSearchFlag(true);
+    async function onSearch(poke, cardClick) {
+        if (cardClick) {
+            const pokeObj = props.pokePage.find((obj) =>
+                obj.nombre.toLowerCase() === poke
+            );
+            setSearchData(pokeObj);
+            console.log("card Clicked, showing details of " + pokeObj.nombre);
+            setSearchFlag(true);
+            return;
+        }
+
         const dataType = typeof poke;
         console.log(dataType);
         if (dataType === "string") {
             try {
-                let { data } = await axios(
-                    `/pokemons?name=${poke}`
-                );
+                let { data } = await axios(`/pokemons?name=${poke}`);
                 console.log(data);
                 setSearchData(data);
-                console.log(searchData);
             } catch (error) {
                 console.error(error);
                 window.alert("Error al buscar el Pokemon");
@@ -75,9 +82,7 @@ export function Home(props) {
             // useNavigate(`/detail/${searchData}`);
         } else if (dataType === "number") {
             try {
-                let { data } = await axios(
-                    `/pokemons/${poke}`
-                );
+                let { data } = await axios(`/pokemons/${poke}`);
                 setSearchData(data);
             } catch (error) {
                 console.error(error);
@@ -86,28 +91,35 @@ export function Home(props) {
 
             // useNavigate(`/detail/${searchData}`);
         } else window.alert("No se ha encontrado ningun Pokemon");
+        setSearchFlag(true);
     }
 
     function conditionalRendering() {
-        if (searchFlag) return <Detail poke={searchData} backHandler={backHandler}/>;
+        if (searchFlag)
+            return <Detail poke={searchData} backHandler={backHandler} />;
         else {
-            return (<>     <Paginador
-                mappingFiltersHandler={mappingFiltersHandler}
-                pagina={pagina}
-                pageChange={paginadorHandler}
-                types={props.types}
-                menuFlag={menuFlag}
-            />
-                <PokeCards
-                    pagina={pagina}
-                    getPokePage={getPokePage}
-                    pokePage={props.pokePage}
-                    filterFlag={filterFlag}
-                    filterPage={props.orderFilterPoke}
-                    menuFlagHandler={menuFlagHandler}
-                    onSearch={onSearch}
-                />;
-            </>)
+            return (
+                <>
+                    {" "}
+                    <Paginador
+                        mappingFiltersHandler={mappingFiltersHandler}
+                        pagina={pagina}
+                        pageChange={paginadorHandler}
+                        types={props.types}
+                        menuFlag={menuFlag}
+                    />
+                    <PokeCards
+                        pagina={pagina}
+                        getPokePage={getPokePage}
+                        pokePage={props.pokePage}
+                        filterFlag={filterFlag}
+                        filterPage={props.orderFilterPoke}
+                        menuFlagHandler={menuFlagHandler}
+                        onSearch={onSearch}
+                    />
+                    ;
+                </>
+            );
         }
     }
 
@@ -115,7 +127,6 @@ export function Home(props) {
         <div>
             <HomeContainer>
                 <Nav onSearch={onSearch} />
-               
 
                 {conditionalRendering()}
             </HomeContainer>
