@@ -18,9 +18,9 @@ export const getPokePage = async (dispatch, query) => {
         let res;
 
         if (query) {
-            res = await axios(`http://localhost:3001/pokemons?page=${query}`)
+            res = await axios(`/pokemons?page=${query}`)
         } else {
-            res = await axios("http://localhost:3001/pokemons");
+            res = await axios("/pokemons");
         }
 
         dispatch({
@@ -34,7 +34,7 @@ export const getPokePage = async (dispatch, query) => {
 
 export const getPokeName = async (dispatch) => {
     try {
-        let res = await axios("http://localhost:3001/pokemons")
+        let res = await axios("/pokemons")
         dispatch({
             type: GET_POKENAME,
             payload: res.data
@@ -47,7 +47,7 @@ export const getPokeName = async (dispatch) => {
 
 export const getPokeId = async (id, dispatch) => {
     try {
-        const res = await axios(`http://localhost:3001/pokemons/${id}`);
+        const res = await axios(`/pokemons/${id}`);
         dispatch({
             type: GET_POKEID,
             payload: res.data,
@@ -59,7 +59,7 @@ export const getPokeId = async (id, dispatch) => {
 
 export const getTypes = async (dispatch) => {
     try {
-        let res = await axios("http://localhost:3001/types")
+        let res = await axios("/types")
         dispatch({
             type: GET_TYPES,
             payload: res.data
@@ -73,7 +73,7 @@ export const getTypes = async (dispatch) => {
 export const postPoke = async (dispatch, payload) => {
     try {
         console.log(payload)
-        let { data } = await axios.post("http://localhost:3001/pokemons", payload)
+        let { data } = await axios.post("/pokemons", payload)
         console.log(data)
         dispatch({
             type: POST_POKE,

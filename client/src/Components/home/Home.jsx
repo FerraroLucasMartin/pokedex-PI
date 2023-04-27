@@ -36,7 +36,7 @@ export function Home(props) {
     }, []);
 
     useEffect(() => {
-        console.log(searchData);
+        console.log("Se esta buscando" + searchData);
     }, [searchData]);
 
     const paginadorHandler = (nuevaPag) => {
@@ -62,7 +62,7 @@ export function Home(props) {
         if (dataType === "string") {
             try {
                 let { data } = await axios(
-                    `http://localhost:3001/pokemons?name=${poke}`
+                    `/pokemons?name=${poke}`
                 );
                 console.log(data);
                 setSearchData(data);
@@ -76,7 +76,7 @@ export function Home(props) {
         } else if (dataType === "number") {
             try {
                 let { data } = await axios(
-                    `http://localhost:3001/pokemons/${poke}`
+                    `/pokemons/${poke}`
                 );
                 setSearchData(data);
             } catch (error) {
