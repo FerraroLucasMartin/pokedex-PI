@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 // import { connect } from "react-redux";
 // import { getPokePage, getTypes } from "../../Redux/Actions";
 
-
 export default function PokeCards(props) {
     const [loading, setloading] = useState(true);
 
@@ -37,6 +36,7 @@ export default function PokeCards(props) {
     const filterMap = props.filterPage.map(function (element) {
         return (
             <Card
+                key={element.nombre}
                 id={element.id}
                 pokeName={element.nombre}
                 pokeImg={element.imagen}
@@ -46,24 +46,21 @@ export default function PokeCards(props) {
         );
     });
 
-    function Loading(){ return (
-        <div>
-            <img
-                src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
-                alt="Loading..."
-            />
-            <h3>Loading...</h3>
-        </div>
-    );
-    
- 
-
+    function Loading() {
+        return (
+            <div>
+                <img
+                    src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
+                    alt="Loading..."
+                />
+                <h3>Loading...</h3>
+            </div>
+        );
     }
 
     {
         if (loading) {
-            return (
-                Loading()
+            return Loading();
             //     <div>
             //         <img
             //             src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
@@ -71,7 +68,6 @@ export default function PokeCards(props) {
             //         />
             //         <h3>Loading...</h3>
             //     </div>
-            );
         } else {
             if (props.filterFlag) {
                 return <CardsContainer>{filterMap}</CardsContainer>;

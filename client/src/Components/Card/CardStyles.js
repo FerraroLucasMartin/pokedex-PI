@@ -37,7 +37,7 @@ export const Type = styled.span`
   font-size: 12px;
   margin: 2px;
   padding: 2px 6px;
-  background-color: ${props => {
+  background-color: ${function (props) {
     switch(props.type) {
       case 'fire':
         return 'orange';

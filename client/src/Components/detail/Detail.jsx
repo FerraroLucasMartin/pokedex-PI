@@ -1,20 +1,26 @@
-
 import React from "react";
 import { SearchButton as BackButton } from "../SearchBar/SBStyles";
 import styled from "styled-components";
-import {DetailDiv, ImgNameDiv,PokemonName,Img,InfoContainer,InfoTag,ValorTag} from "./detailStyles"
+import {
+    DetailDiv,
+    ImgNameDiv,
+    PokemonName,
+    Img,
+    InfoContainer,
+    InfoTag,
+    ValorTag,
+} from "./detailStyles";
 import { CardDiv, Image, Name, Type, TypesContainer } from "../Card/CardStyles";
 
-
 export default function Detail({ poke, backHandler }) {
-    // const {nombre} = poke||""
-    // const mayusPokeName = nombre.toUpperCase() + poke.nombre.slice(1) || "";
+    const {nombre} = poke||""
+    const mayusPokeName = nombre.charAt(0).toUpperCase() + poke.nombre.slice(1) || "";
     return (
         <div>
             <DetailDiv>
                 <ImgNameDiv>
                     <Img src={poke.imagen} alt="" />
-                    <PokemonName>{poke.nombre}</PokemonName>
+                    <PokemonName>{mayusPokeName}</PokemonName>
                     {/* <TypesContainer>
                         {poke.tipos.map((tipo, i) => (
                             <Type key={i} type={tipo}>
@@ -43,10 +49,8 @@ export default function Detail({ poke, backHandler }) {
                     <InfoTag>Vida:</InfoTag>
                     <ValorTag>{poke.vida} HP</ValorTag>
                 </InfoContainer>
-                            <BackButton onClick={()=>backHandler()} >Back Home</BackButton>
+                <BackButton onClick={() => backHandler()}>Back Home</BackButton>
             </DetailDiv>
-
-
         </div>
     );
 }

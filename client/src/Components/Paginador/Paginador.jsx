@@ -46,7 +46,7 @@ export const Paginador = (props) => {
     //Tipos options del select
     const typesArray = props.types[0] || [];
     const OptionTipos = typesArray.map((element) => {
-        return <option value={element.nombre}>{element.nombre}</option>;
+        return <option key={"tipo: " + element.nombre} value={element.nombre}>{element.nombre}</option>;
     });
 
     const filterHandler = (event) => {

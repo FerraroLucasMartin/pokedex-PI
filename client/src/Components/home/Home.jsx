@@ -35,10 +35,6 @@ export function Home(props) {
         getTypes(dispatch);
     }, []);
 
-    useEffect(() => {
-        console.log("Se esta buscando" + searchData);
-    }, [searchData]);
-
     const paginadorHandler = (nuevaPag) => {
         setpagina(nuevaPag);
     };
@@ -58,8 +54,8 @@ export function Home(props) {
 
     async function onSearch(poke, cardClick) {
         if (cardClick) {
-            const pokeObj = props.pokePage.find((obj) =>
-                obj.nombre.toLowerCase() === poke
+            const pokeObj = props.pokePage.find(
+                (obj) => obj.nombre.toLowerCase() === poke
             );
             setSearchData(pokeObj);
             console.log("card Clicked, showing details of " + pokeObj.nombre);
@@ -73,25 +69,30 @@ export function Home(props) {
             try {
                 let { data } = await axios(`/pokemons?name=${poke}`);
                 console.log(data);
-                setSearchData(data);
+                if (data) {
+                    setSearchData(data);
+                    setSearchFlag(true);
+                }
             } catch (error) {
                 console.error(error);
-                window.alert("Error al buscar el Pokemon");
+                window.alert("No se ha encontrado ningun Pokemon con ese nombre");
             }
 
             // useNavigate(`/detail/${searchData}`);
         } else if (dataType === "number") {
             try {
                 let { data } = await axios(`/pokemons/${poke}`);
-                setSearchData(data);
+                if (data) {
+                    setSearchData(data);
+                    setSearchFlag(true);
+                }
             } catch (error) {
                 console.error(error);
-                window.alert("Error al buscar el Pokemon");
+                window.alert("No se ha encontrado ningun Pokemon con ese Id");
             }
 
             // useNavigate(`/detail/${searchData}`);
         } else window.alert("No se ha encontrado ningun Pokemon");
-        setSearchFlag(true);
     }
 
     function conditionalRendering() {
@@ -117,7 +118,6 @@ export function Home(props) {
                         menuFlagHandler={menuFlagHandler}
                         onSearch={onSearch}
                     />
-                    ;
                 </>
             );
         }
