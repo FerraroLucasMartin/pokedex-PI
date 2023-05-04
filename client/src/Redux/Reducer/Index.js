@@ -48,13 +48,19 @@ const rootReducer = (state = initialState, action) => {
         case allActions.FILTER_TYPE:
             return {
                 ...state,
-                orderFilterPoke: state.pokePage.filter(
+                orderFilterPoke: state.orderFilterPoke.filter(
                     (poke) => {
-                        for (let index = 0; index < poke.types.length; index++) {
-                            const element = poke.types[index].type.name;
-                            if (element === action.payload) return true;
-                        }
-                        return false;
+
+                        if (Array.isArray(poke.types)) {
+
+                            for (let index = 0; index < poke.types.length; index++) {
+                                const element = poke.types[index].type.name;
+                                if (element === action.payload) return true;
+                            }
+                            return false;
+                        } else if (poke.types === action.payload) return true
+                        else return false;
+
                     }
                 )
             }
@@ -63,7 +69,7 @@ const rootReducer = (state = initialState, action) => {
             console.log("llega hasta aca")
 
             if (action.payload === "database") {
-               
+
                 return {
                     ...state,
                     orderFilterPoke: [...state.createdPoke]
@@ -108,7 +114,7 @@ const rootReducer = (state = initialState, action) => {
                 orderFilterPoke: [...orderNam]
             }
 
-            case allActions.RESET_FILTER:
+        case allActions.RESET_FILTER:
             return {
                 ...state,
                 orderFilterPoke: [...state.pokePage]

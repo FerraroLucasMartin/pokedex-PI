@@ -12,7 +12,7 @@ export const Searchbar = (props) => {
     function searchValidation(searchValue) {
         //number Validation
         let NumPattern = /^\d+$/;
-                let isValidNum = NumPattern.test(searchValue) && searchValue < 10262;
+        let isValidNum = (NumPattern.test(searchValue) && searchValue >= 1 && searchValue <= 1010) || (NumPattern.test(searchValue) && searchValue >= 10001 && searchValue <= 10262);
         //string validation
         const stringPattern = /^[a-zA-Z]+$/;
         const isValidChar = stringPattern.test(searchValue); //.test metodo para probar regex
@@ -22,7 +22,7 @@ export const Searchbar = (props) => {
             props.onSearch(searchValue);
         
         } else {
-            alert("Error al buscar Pokemon, revisa el Input. Debe ser un nombre de pokemon valido o un Id entre 1 y 10262");
+            alert("Error al buscar Pokemon, revisa el Input. Debe ser un nombre de pokemon valido o un Id entre 1 y 1010 o para versiones MEGA entre 10001 y 10262");
         }
     }
 

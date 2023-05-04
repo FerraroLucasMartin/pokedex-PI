@@ -16,6 +16,7 @@ export default function PokeCards(props) {
     const { pageArray } = props;
 
     const dispatch = useDispatch();
+    
     useEffect(() => {
         props.getPokePage(dispatch, pagina).then(() => setloading(false));
         props.menuFlagHandler();
@@ -61,13 +62,6 @@ export default function PokeCards(props) {
     {
         if (loading) {
             return Loading();
-            //     <div>
-            //         <img
-            //             src="https://miro.medium.com/v2/resize:fit:1000/1*8OlHww3sk8kiYEfEEIZIkw.gif"
-            //             alt="Loading..."
-            //         />
-            //         <h3>Loading...</h3>
-            //     </div>
         } else {
             if (props.filterFlag) {
                 return <CardsContainer>{filterMap}</CardsContainer>;

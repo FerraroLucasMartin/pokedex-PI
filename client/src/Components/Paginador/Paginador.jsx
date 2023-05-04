@@ -16,7 +16,7 @@ export const Paginador = (props) => {
         origin: "default",
     });
 
-    //devuelve los valores a default al re-renderizar
+    // devuelve los valores a default al re-renderizar
     useEffect(() => {
         setMenuValor({
             attOrder: "default",
@@ -29,7 +29,7 @@ export const Paginador = (props) => {
     const dispatch = useDispatch();
 
     //Paginador
-    const totalPags = Math.ceil(1279 / 12);
+    const totalPags = Math.ceil(1280 / 12);
     const pageNumArray = [];
     const paginador = () => {
         for (let index = 1; index < totalPags; index++) {
@@ -51,6 +51,7 @@ export const Paginador = (props) => {
 
     const filterHandler = (event) => {
         console.log(event.target.value);
+
         const filtro = event.target.name;
         if (filtro === "tipo") {
             setMenuValor({
@@ -69,7 +70,6 @@ export const Paginador = (props) => {
             });
 
             props.mappingFiltersHandler();
-            console.log("llega hasta el return del handler");
             return dispatch(filterOrigin(event.target.value));
         }
     };

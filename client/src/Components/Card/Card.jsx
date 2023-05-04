@@ -8,7 +8,7 @@ export const Card = ({ pokeName, pokeImg, types, onSearch }) => {
         if (Array.isArray(types)) {
             return types.map((element) => {
                 return (
-                    <Type type={element.type.name}>
+                    <Type key={element.type.name} type={element.type.name}>
                         {element.type.name.charAt(0).toUpperCase() +
                             element.type.name.slice(1)}
                     </Type>

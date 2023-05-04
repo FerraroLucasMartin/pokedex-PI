@@ -17,8 +17,8 @@ export const urlValidator= (errorFlag)=>{
 }
 
 export const tipeValidator= (errorFlag)=>{
-    if (errorFlag.inputTipo ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
-    if (errorFlag.inputTipo ===true) return <ErrorMsg>Tipo Invalido.</ErrorMsg>
+    if (errorFlag.types ==="empty") return <ErrorMsg>Campo obligatorio.</ErrorMsg>
+    if (errorFlag.types ===true) return <ErrorMsg>Tipo Invalido.</ErrorMsg>
 }
 
 export const numberValidator = (errorFlag,input)=>{

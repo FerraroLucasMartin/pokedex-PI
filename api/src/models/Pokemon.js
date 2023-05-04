@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
     },
     //other.official-artwork.front_default
     imagen:{
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
 

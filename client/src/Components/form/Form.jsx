@@ -19,13 +19,13 @@ import * as validations from "./validations";
 import { postPoke, getTypes } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 const Form = (props) => {
-     const [inputs, setInputs] = useState({
+    const [inputs, setInputs] = useState({
         nombre: "",
         imagen: "",
-        types: [],
+        types: "default",
         ataque: 0,
         defensa: 0,
         altura: 0,
@@ -34,15 +34,15 @@ const Form = (props) => {
         vida: 0,
     });
     const [errorFlag, setErrorFlag] = useState({
-        nombre: false,
-        imagen: false,
-        types: false,
-        ataque: false,
-        defensa: false,
-        altura: false,
-        peso: false,
-        velocidad: false,
-        vida: false,
+        nombre: "empty",
+        imagen: "empty",
+        types: "empty",
+        ataque: "empty",
+        defensa: "empty",
+        altura: "empty",
+        peso: "empty",
+        velocidad: "empty",
+        vida: "empty",
     });
 
     const dispatch = useDispatch();
@@ -53,93 +53,110 @@ const Form = (props) => {
 
     const typesArray = props.types[0] || [];
     const OptionTipos = typesArray.map((element) => {
-        return <option value={element.nombre}>{element.nombre}</option>;
+        return <option key={element.nombre} value={element.nombre}>{element.nombre}</option>;
     });
 
     function handleInputChanges(e) {
-        setInputs({ ...inputs, [e.target.name]: e.target.value });
-    }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+        setInputs({ ...inputs, [e.target.name]: e.target.value.toLowerCase() })
 
-        //chequeo si estan vacios.
+        console.log([e.target.name] + e.target.value )
 
-        for (const key in inputs) {
-            const element = inputs[key];
-            if (element === "" || element === 0 ||element === []) {
-                setErrorFlag((prevState) => ({ ...prevState, [key]: "empty" }));
-            }
-        }
+        if (e.target.name === "nombre") {
 
-        //validaciones
+            console.log(inputs.nombre);
 
-        if (inputs.nombre) {
-            console.log(inputs.nombre)
             const pattern = /^[a-zA-Z]+$/;
-            const isValidChar = pattern.test(inputs.nombre); //.test metodo para probar regex
-            console.log(isValidChar)
+            const isValidChar = pattern.test(e.target.value); //.test metodo para probar regex
+            console.log(isValidChar);
             const isValidLength = inputs.nombre.length <= 20;
+
             if (!isValidChar || !isValidLength) {
-                setErrorFlag(prevState => ({
+                setErrorFlag((prevState) => ({
                     ...prevState,
                     nombre: true,
                 }));
                 console.log("nombre is failing");
-
+            } else {
+                setErrorFlag((prevState) => ({
+                    ...prevState,
+                    nombre: false,
+                }));
             }
         }
-        if (inputs.types) {
+
+        if (e.target.name === "types") {
             const isValidType = props.types.indexOf(inputs.types) >= 0;
             if (isValidType < 0) {
-                setErrorFlag(prevState=>({
+                setErrorFlag((prevState) => ({
                     ...prevState,
                     types: true,
                 }));
                 console.log("Tipo is failing");
-            }else{
-                setErrorFlag(prevState=>({
+            } else {
+                setErrorFlag((prevState) => ({
                     ...prevState,
                     types: false,
                 }));
             }
         }
-        if (inputs.imagen) {
+
+        if (e.target.name === "imagen") {
             const pattern = /^(ftp|http|https):\/\/[^ "]+$/;
-            const isValidUrl = pattern.test(inputs.imagen);
+            console.log(e.target.value);
+            const isValidUrl = pattern.test(e.target.value);
+            console.log(isValidUrl);
             if (!isValidUrl) {
-                setErrorFlag(prevState=>({
+                setErrorFlag((prevState) => ({
                     ...prevState,
                     imagen: true,
                 }));
                 console.log("imagen is failing");
+            } else {
+                setErrorFlag((prevState) => ({
+                    ...prevState,
+                    imagen: false,
+                }));
             }
         }
 
-        for (const key in inputs) {
-            const element = inputs[key];
-            if (
-                key !== "nombre" && key !=="types" && key !=="imagen"
-            ) {
-                let pattern = /^\d+$/;
-                let isValidChar = pattern.test(element);
-                let moreThanValid = element < 500;
-                if (!isValidChar || !moreThanValid) {
-                    setErrorFlag(prevState=>({ ...prevState, [key]: true }));
-                    console.log(key + " is failing");
-                }
+        if (
+            e.target.name !== "nombre" &&
+            e.target.name !== "types" &&
+            e.target.name !== "imagen"
+        ) {
+            let pattern = /^\d+$/;
+            let isValidChar = pattern.test(e.target.value);
+            let moreThanValid = e.target.value < 500;
+            if (!isValidChar || !moreThanValid) {
+                setErrorFlag((prevState) => ({
+                    ...prevState,
+                    [e.target.name]: true,
+                }));
+                console.log(e.target.name + " is failing");
+            } else {
+                setErrorFlag((prevState) => ({
+                    ...prevState,
+                    [e.target.name]: false,
+                }));
             }
         }
 
-        //¿Hay error?
-        for (const key in errorFlag) {
-            const element = errorFlag[key];
-            if (element === true ||element === "empty" ) {
-            console.log("Hay un error aborting");
+
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+   
+        const isFailing = Object.values(errorFlag).some(
+            (val) => val === "empty" || val === true
+        );
+        
+        if (isFailing) {
+            alert("Error al crear Pokemon, revisa los Inputs");
             return null;
-            }
         }
-
+        else {
             postPoke(dispatch, inputs);
             setInputs({
                 nombre: "",
@@ -152,113 +169,128 @@ const Form = (props) => {
                 vida: 0,
                 imagen: "",
             });
-        alert("El pokemon ha sido creado con exito!");
+            setErrorFlag({
+                nombre: "empty",
+                imagen: "empty",
+                types: "empty",
+                ataque: "empty",
+                defensa: "empty",
+                altura: "empty",
+                peso: "empty",
+                velocidad: "empty",
+                vida: "empty",
+            }
+            )
+            alert("El pokemon ha sido creado con exito!");
+        }
     };
 
-    return (<>
-        <Wrapper>
-            <FormContainer action="" onSubmit={handleSubmit}>
-                <SubCont>
-                    <FormLabel htmlFor="">Nombre: </FormLabel>
-                    <FormInput
-                        type="text"
-                        value={inputs.nombre}
-                        name="nombre"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.nameValidator(errorFlag)}
+    return (
+        <>
+            <Wrapper>
+                <FormContainer action="" onSubmit={handleSubmit}>
+                    <SubCont>
+                        <FormLabel htmlFor="">Nombre: </FormLabel>
+                        <FormInput
+                            type="text"
+                            value={inputs.nombre}
+                            name="nombre"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.nameValidator(errorFlag)}
 
-                    <br />
-                    <FormLabel htmlFor="">Tipo: </FormLabel>
-                    {/* <FormInput
-                        type="text"
-                        value={inputs.types}
-                        name="types"
-                        onChange={handleInputChanges}
-                    /> */}
-
-                    <SelectInput
-                        name="types"
-                        value={[inputs.types]}
-                        onChange={handleInputChanges}
-                    >
-                        <option value="default" disabled defaultValue selected hidden>
-                            Select Tipo
-                        </option>
-                        {OptionTipos}
-                    </SelectInput>
-                    {validations.tipeValidator(errorFlag)}
-                    <br />
-                    <FormLabel htmlFor="">Imagen URL: </FormLabel>
-                    <FormInput
-                        type="text"
-                        value={inputs.imagen}
-                        name="imagen"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.urlValidator(errorFlag)}
-                    <br />
-                    <FormLabel htmlFor="">Vida: </FormLabel>
-                    <FormInput
-                        type="number"
-                        value={inputs.vida}
-                        name="vida"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.numberValidator(errorFlag,"vida")}
-                    <br />
-                    <FormLabel htmlFor="">Velocidad: </FormLabel>
-                    <FormInput
-                        type="number"
-                        value={inputs.velocidad}
-                        name="velocidad"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.numberValidator(errorFlag,"velocidad")}
-                </SubCont>
-                <SubCont>
-                    <FormLabel htmlFor="">Ataque: </FormLabel>
-                    <FormInput
-                        type="number"
-                        value={inputs.ataque}
-                        name="ataque"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.numberValidator(errorFlag,"ataque")}
-                    <br />
-                    <FormLabel htmlFor="">Defensa: </FormLabel>
-                    <FormInput
-                        type="number"
-                        name="defensa"
-                        value={inputs.defensa}
-                        onChange={handleInputChanges}
-                    ></FormInput>
-                    {validations.numberValidator(errorFlag,"defensa")}
-                    <br />
-                    <FormLabel htmlFor="">Altura: </FormLabel>
-                    <FormInput
-                        value={inputs.altura}
-                        type="number"
-                        name="altura"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.numberValidator(errorFlag,"altura")}
-                    <br />
-                    <FormLabel htmlFor="">Peso: </FormLabel>
-                    <FormInput
-                        value={inputs.peso}
-                        type="number"
-                        name="peso"
-                        onChange={handleInputChanges}
-                    />
-                    {validations.numberValidator(errorFlag,"peso")}
-                    <br />
-                    <FormButton type="submit">Crear Pokemon</FormButton>
-                </SubCont>
-            </FormContainer>
-            <Link to="/Home"><BackButton>Back Home</BackButton></Link>
-        </Wrapper>
-        
+                        <br />
+                        <FormLabel htmlFor="">Tipo: </FormLabel>
+                        <SelectInput
+                            name="types"
+                            value={inputs.types}
+                            onChange={handleInputChanges}
+                        >
+                            <option
+                                value="default"
+                                disabled
+                                defaultValue
+                                // selected
+                                hidden
+                            >
+                                Select Tipo
+                            </option>
+                            {OptionTipos}
+                        </SelectInput>
+                        {validations.tipeValidator(errorFlag)}
+                        
+                        <br />
+                        <FormLabel htmlFor="">Imagen URL: </FormLabel>
+                        <FormInput
+                            type="text"
+                            value={inputs.imagen}
+                            name="imagen"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.urlValidator(errorFlag)}
+                        <br />
+                        <FormLabel htmlFor="">Vida: </FormLabel>
+                        <FormInput
+                            type="number"
+                            value={inputs.vida}
+                            name="vida"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.numberValidator(errorFlag, "vida")}
+                        <br />
+                        <FormLabel htmlFor="">Velocidad: </FormLabel>
+                        <FormInput
+                            type="number"
+                            value={inputs.velocidad}
+                            name="velocidad"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.numberValidator(errorFlag, "velocidad")}
+                    </SubCont>
+                    <SubCont>
+                        <FormLabel htmlFor="">Ataque: </FormLabel>
+                        <FormInput
+                            type="number"
+                            value={inputs.ataque}
+                            name="ataque"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.numberValidator(errorFlag, "ataque")}
+                        <br />
+                        <FormLabel htmlFor="">Defensa: </FormLabel>
+                        <FormInput
+                            type="number"
+                            name="defensa"
+                            value={inputs.defensa}
+                            onChange={handleInputChanges}
+                        ></FormInput>
+                        {validations.numberValidator(errorFlag, "defensa")}
+                        <br />
+                        <FormLabel htmlFor="">Altura: </FormLabel>
+                        <FormInput
+                            value={inputs.altura}
+                            type="number"
+                            name="altura"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.numberValidator(errorFlag, "altura")}
+                        <br />
+                        <FormLabel htmlFor="">Peso: </FormLabel>
+                        <FormInput
+                            value={inputs.peso}
+                            type="number"
+                            name="peso"
+                            onChange={handleInputChanges}
+                        />
+                        {validations.numberValidator(errorFlag, "peso")}
+                        <br />
+                        <FormButton type="submit">Crear Pokemon</FormButton>
+                    </SubCont>
+                </FormContainer>
+                <Link to="/Home">
+                    <BackButton>Back Home</BackButton>
+                </Link>
+            </Wrapper>
         </>
     );
 };

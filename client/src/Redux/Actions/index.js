@@ -108,7 +108,6 @@ export function filterType(tipo) {
 }
 
 export function filterOrigin(origin) {
-    console.log("Entra a la action")
     return {
         type: FILTER_ORIGIN,
         payload: origin

@@ -24,16 +24,35 @@ import { useDispatch } from "react-redux";
 import { HomeContainer } from "./HomeStyles";
 
 export function Home(props) {
-    const [pagina, setpagina] = useState(1);
+
+
+    const [pagina, setpagina] = useState(() => {
+        const pagGuardada = localStorage.getItem("pagActual");
+        return pagGuardada ? parseInt(pagGuardada) : 1;
+    });
+
+    
     const [filterFlag, setFilterFlag] = useState(false);
+
+    //resetea filters y orders al cambiar pags.
     const [menuFlag, setMenuFlag] = useState(false);
+
+    //guarda la data buscada
     const [searchData, setSearchData] = useState({});
+
+    //avisa que se esta haciendo una busqueda
     const [searchFlag, setSearchFlag] = useState(false);
 
     const dispatch = useDispatch();
     useEffect(() => {
         getTypes(dispatch);
     }, []);
+
+    //localStorage es un almacenamiento web en el browser del usuario. formato key:value
+    useEffect(() => {
+        localStorage.setItem("pagActual", pagina);
+        console.log("esta es la pagina guardada: " + localStorage.getItem("pagActual"))
+    }, [pagina]);
 
     const paginadorHandler = (nuevaPag) => {
         setpagina(nuevaPag);
@@ -54,9 +73,11 @@ export function Home(props) {
 
     async function onSearch(poke, cardClick) {
         if (cardClick) {
-            const pokeObj = props.pokePage.find(
+            console.log(poke)
+            const pokeObj = props.orderFilterPoke.find(
                 (obj) => obj.nombre.toLowerCase() === poke
             );
+            console.log(pokeObj)
             setSearchData(pokeObj);
             console.log("card Clicked, showing details of " + pokeObj.nombre);
             setSearchFlag(true);
@@ -64,7 +85,7 @@ export function Home(props) {
         }
 
         const dataType = typeof poke;
-        console.log(dataType);
+        console.log("on searh: " + dataType);
         if (dataType === "string") {
             try {
                 let { data } = await axios(`/pokemons?name=${poke}`);
@@ -102,13 +123,6 @@ export function Home(props) {
             return (
                 <>
                     {" "}
-                    <Paginador
-                        mappingFiltersHandler={mappingFiltersHandler}
-                        pagina={pagina}
-                        pageChange={paginadorHandler}
-                        types={props.types}
-                        menuFlag={menuFlag}
-                    />
                     <PokeCards
                         pagina={pagina}
                         getPokePage={getPokePage}
@@ -127,6 +141,13 @@ export function Home(props) {
         <div>
             <HomeContainer>
                 <Nav onSearch={onSearch} />
+                <Paginador
+                        mappingFiltersHandler={mappingFiltersHandler}
+                        pagina={pagina}
+                        pageChange={paginadorHandler}
+                        types={props.types}
+                        menuFlag={menuFlag}
+                    />
 
                 {conditionalRendering()}
             </HomeContainer>
