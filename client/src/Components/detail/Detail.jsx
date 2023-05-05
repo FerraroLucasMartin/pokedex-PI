@@ -10,24 +10,33 @@ import {
     InfoTag,
     ValorTag,
 } from "./detailStyles";
+
 import { CardDiv, Image, Name, Type, TypesContainer } from "../Card/CardStyles";
 
 export default function Detail({ poke, backHandler }) {
     const {nombre} = poke||""
     const mayusPokeName = nombre.charAt(0).toUpperCase() + poke.nombre.slice(1) || "";
+
+    const typesMap = () => {
+        if (Array.isArray(poke.types)) {
+            return poke.types.map((element) => {
+                return (
+                    <Type key={element.type.name} style={{marginTop:"-15px"}} type={element.type.name}>
+                        {element.type.name.charAt(0).toUpperCase() +
+                            element.type.name.slice(1)}
+                    </Type>
+                );
+            });
+        } else return <Type type={poke.types}>{poke.types}</Type>;
+    };
+
     return (
         <div>
             <DetailDiv>
                 <ImgNameDiv>
                     <Img src={poke.imagen} alt="" />
                     <PokemonName>{mayusPokeName}</PokemonName>
-                    {/* <TypesContainer>
-                        {poke.tipos.map((tipo, i) => (
-                            <Type key={i} type={tipo}>
-                                {tipo}
-                            </Type>
-                        ))}
-                    </TypesContainer> */}
+                    <TypesContainer style={{marginTop:"-2px"}} >{typesMap()}</TypesContainer>
                 </ImgNameDiv>
 
                 <InfoContainer>
