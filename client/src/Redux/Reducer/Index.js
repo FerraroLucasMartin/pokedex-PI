@@ -1,6 +1,7 @@
 import * as allActions from "../Actions/index"
 
 const initialState = {
+    pagina: 1,
     pokePage: [],
     orderFilterPoke: [],
     pokeDetail: {},
@@ -10,6 +11,14 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
+
+        case allActions.GET_PAGINA:
+            console.log(action.payload)
+            return {
+             ...state,
+             pagina: action.payload
+            }
+
         case allActions.GET_POKEPAGE:
             return {
                 ...state,
@@ -48,7 +57,7 @@ const rootReducer = (state = initialState, action) => {
         case allActions.FILTER_TYPE:
             return {
                 ...state,
-                orderFilterPoke: state.orderFilterPoke.filter(
+                orderFilterPoke: state.pokePage.filter(
                     (poke) => {
 
                         if (Array.isArray(poke.types)) {

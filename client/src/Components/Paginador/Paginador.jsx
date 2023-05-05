@@ -2,18 +2,21 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import { SearchButton as ResetButton } from "../SearchBar/SBStyles";
+import { SearchButton as NavButton } from "../SearchBar/SBStyles";
 import { Container, Selector } from "./PaginadorStyles";
 
 import { useDispatch } from "react-redux";
-import { filterType, filterOrigin } from "../../Redux/Actions";
+import { connect } from "react-redux";
+import { filterType, filterOrigin, getPagina } from "../../Redux/Actions";
 import { orderAtt, orderNam, resetFilters } from "../../Redux/Actions";
 
-export const Paginador = (props) => {
+const Paginador = (props) => {
     const [menuValor, setMenuValor] = useState({
         attOrder: "default",
         alfOrder: "default",
         TypeFilt: "default",
         origin: "default",
+        paginador: 1,
     });
 
     // devuelve los valores a default al re-renderizar
@@ -23,8 +26,13 @@ export const Paginador = (props) => {
             alfOrder: "default",
             TypeFilt: "default",
             origin: "default",
+            paginador: props.pagina,
         });
-    }, [props.menuFlag]);
+    }, [props.resetMenuFlag]);
+
+    useEffect(() => {
+        setMenuValor({ ...menuValor, paginador: props.pagina });
+    }, [props.pagina]);
 
     const dispatch = useDispatch();
 
@@ -39,14 +47,35 @@ export const Paginador = (props) => {
     paginador();
 
     const selectPageHandler = (event) => {
-        const queryNum = event.target.value;
-        props.pageChange(queryNum);
+        console.log(event.target.name)
+        console.log(event.target.selectedIndex)
+
+        const { name, selectedIndex } = event.target;
+
+        if (name === "prev" && menuValor.paginador > 1) {
+          props.getPagina(menuValor.paginador - 1);
+          return;
+        }
+      
+        if (name === "next" && menuValor.paginador < totalPags) {
+          props.getPagina(menuValor.paginador + 1);
+          return;
+        }
+      
+        if (name === "paginas") {
+          const NumPag = selectedIndex + 1;
+          props.getPagina(NumPag);
+        }
     };
 
     //Tipos options del select
     const typesArray = props.types[0] || [];
     const OptionTipos = typesArray.map((element) => {
-        return <option key={"tipo: " + element.nombre} value={element.nombre}>{element.nombre}</option>;
+        return (
+            <option key={"tipo: " + element.nombre} value={element.nombre}>
+                {element.nombre}
+            </option>
+        );
     });
 
     const filterHandler = (event) => {
@@ -94,9 +123,28 @@ export const Paginador = (props) => {
 
     return (
         <Container>
-            <Selector name="paginas" onClick={selectPageHandler}>
+            <NavButton
+                name="prev"
+                onClick={selectPageHandler}
+                style={{ fontSize: "7px" }}
+            >
+                Prev
+            </NavButton>
+            <Selector
+                style={{ marginRight: "-20px", marginLeft: "-20px" }}
+                name="paginas"
+                value={menuValor.paginador}
+                onChange={selectPageHandler}
+            >
                 {pageNumArray}
             </Selector>
+            <NavButton
+                name="next"
+                onClick={selectPageHandler}
+                style={{ fontSize: "7px" }}
+            >
+                Next
+            </NavButton>
 
             <Selector
                 name="Ataque"
@@ -161,3 +209,19 @@ export const Paginador = (props) => {
         </Container>
     );
 };
+
+export const mapStateToProps = (state) => {
+    return {
+        pagina: state.pagina,
+        pokePage: state.pokePage,
+        createdPoke: state.createdPoke,
+        types: state.types,
+        orderFilterPoke: state.orderFilterPoke,
+    };
+};
+
+export const mapDispatchToProps = {
+    getPagina,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Paginador);

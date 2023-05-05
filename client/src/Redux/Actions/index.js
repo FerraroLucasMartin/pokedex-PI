@@ -11,7 +11,16 @@ export const ORDER_NAM = "ORDER_NAM"
 export const FILTER_TYPE = "FILTER_TYPE"
 export const FILTER_ORIGIN = "FILTER_ORIGIN"
 export const RESET_FILTER = "RESET_FILTER"
+export const GET_PAGINA = "GET_PAGINA"
 
+
+export function getPagina(numPag){
+    return {
+        type: GET_PAGINA,
+        payload: numPag
+    }
+
+}
 
 export const getPokePage = async (dispatch, query) => {
     try {

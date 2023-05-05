@@ -6,10 +6,10 @@ import { Card } from "../Card/Card";
 import { CardsContainer } from "./PokeCardsStyles";
 
 import { useDispatch } from "react-redux";
-// import { connect } from "react-redux";
-// import { getPokePage, getTypes } from "../../Redux/Actions";
+import { connect } from "react-redux";
+import { getPokePage} from "../../Redux/Actions";
 
-export default function PokeCards(props) {
+function PokeCards(props) {
     const [loading, setloading] = useState(true);
 
     const pagina = props.pagina;
@@ -18,8 +18,8 @@ export default function PokeCards(props) {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        props.getPokePage(dispatch, pagina).then(() => setloading(false));
-        props.menuFlagHandler();
+        getPokePage(dispatch, pagina).then(() => setloading(false));
+        props.resetMenuFlagHandler();
     }, [pagina]);
 
     const cardsMap = props.pokePage.map(function (element) {
@@ -34,7 +34,7 @@ export default function PokeCards(props) {
         );
     });
 
-    const filterMap = props.filterPage.map(function (element) {
+    const filterMap = props.orderFilterPoke.map(function (element) {
         return (
             <Card
                 key={element.nombre}
@@ -69,3 +69,20 @@ export default function PokeCards(props) {
         }
     }
 }
+
+export const mapStateToProps = (state) => {
+    return {
+        pagina: state.pagina,
+        pokePage: state.pokePage,
+        createdPoke: state.createdPoke,
+        types: state.types,
+        orderFilterPoke: state.orderFilterPoke,
+    };
+};
+
+export const mapDispatchToProps = {
+    getPokePage,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PokeCards);

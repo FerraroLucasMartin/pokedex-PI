@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import PokeCards from "../PokeCards/PokeCards";
 import { Searchbar } from "../SearchBar/Searchbar";
 import Nav from "../Nav/Nav";
-import { Paginador } from "../Paginador/Paginador";
+import Paginador from "../Paginador/Paginador";
 import Detail from "../detail/Detail";
 
 //Redux
@@ -25,17 +25,10 @@ import { HomeContainer } from "./HomeStyles";
 
 export function Home(props) {
 
-
-    const [pagina, setpagina] = useState(() => {
-        const pagGuardada = localStorage.getItem("pagActual");
-        return pagGuardada ? parseInt(pagGuardada) : 1;
-    });
-
-    
     const [filterFlag, setFilterFlag] = useState(false);
 
     //resetea filters y orders al cambiar pags.
-    const [menuFlag, setMenuFlag] = useState(false);
+    const [resetMenuFlag, setResetMenuFlag] = useState(false);
 
     //guarda la data buscada
     const [searchData, setSearchData] = useState({});
@@ -46,20 +39,10 @@ export function Home(props) {
     const dispatch = useDispatch();
     useEffect(() => {
         getTypes(dispatch);
-    }, []);
+    },[]);
 
-    //localStorage es un almacenamiento web en el browser del usuario. formato key:value
-    useEffect(() => {
-        localStorage.setItem("pagActual", pagina);
-        console.log("esta es la pagina guardada: " + localStorage.getItem("pagActual"))
-    }, [pagina]);
-
-    const paginadorHandler = (nuevaPag) => {
-        setpagina(nuevaPag);
-    };
-
-    const menuFlagHandler = () => {
-        setMenuFlag(!menuFlag);
+    const resetMenuFlagHandler = () => {
+        setResetMenuFlag(!resetMenuFlag);
     };
 
     const mappingFiltersHandler = () => {
@@ -124,12 +107,8 @@ export function Home(props) {
                 <>
                     {" "}
                     <PokeCards
-                        pagina={pagina}
-                        getPokePage={getPokePage}
-                        pokePage={props.pokePage}
                         filterFlag={filterFlag}
-                        filterPage={props.orderFilterPoke}
-                        menuFlagHandler={menuFlagHandler}
+                        resetMenuFlagHandler={resetMenuFlagHandler}
                         onSearch={onSearch}
                     />
                 </>
@@ -143,10 +122,7 @@ export function Home(props) {
                 <Nav onSearch={onSearch} />
                 <Paginador
                         mappingFiltersHandler={mappingFiltersHandler}
-                        pagina={pagina}
-                        pageChange={paginadorHandler}
-                        types={props.types}
-                        menuFlag={menuFlag}
+                        resetMenuFlag={resetMenuFlag}
                     />
 
                 {conditionalRendering()}
