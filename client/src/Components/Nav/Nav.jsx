@@ -1,6 +1,6 @@
 //Styles
 import styled from "styled-components";
-import { TitleImg, NavDiv, CreateLink } from "./NavStyles";
+import { TitleImg, NavDiv } from "./NavStyles";
 import { SearchButton as CreateButton } from "../SearchBar/SBStyles";
 
 import { Searchbar } from "../SearchBar/Searchbar";
