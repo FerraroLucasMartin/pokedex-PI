@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -L",
     "test": "mocha -w ./tests/**/*.spec.js",
-      "build": "npm install",
+    "build": "npm install",
     "render-start": "node index.js"
   },
   "author": "Henry",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^8.2.1",
+    "mocha": "^10.6.0",
     "nodemon": "^2.0.6",
     "supertest": "^6.0.1",
     "supertest-session": "^4.1.0"
