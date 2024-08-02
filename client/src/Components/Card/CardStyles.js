@@ -14,10 +14,10 @@ export const CardDiv = styled.div`
   height: 1%;
   transition: transform 0.2s ease-in-out;
 
-&:hover {
-  transform: scale(0.95);
-  cursor: pointer;
-}
+  &:hover {
+    transform: scale(0.95);
+    cursor: pointer;
+  }
 `;
 
 export const Image = styled.img`
@@ -35,19 +35,18 @@ export const Type = styled.span`
   border-radius: 5px;
   color: #fff;
   font-size: 12px;
-  margin: 2px;
   padding: 2px 6px;
   background-color: ${function (props) {
-    switch(props.type) {
-      case 'fire':
-        return 'orange';
-      case 'water':
-        return 'blue';
-      case 'grass':
-        return 'green';
+    switch (props.type) {
+      case "fire":
+        return "orange";
+      case "water":
+        return "lightblue";
+      case "grass":
+        return "green";
       // agregar mas colores y casos.
       default:
-        return 'gray';
+        return "gray";
     }
   }};
 `;

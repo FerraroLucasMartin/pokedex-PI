@@ -11,10 +11,10 @@ import Detail from "../detail/Detail";
 
 //Redux
 import {
-    getPokePage,
-    getPokeName,
-    getPokeId,
-    getTypes,
+  getPokePage,
+  getPokeName,
+  getPokeId,
+  getTypes,
 } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -24,125 +24,115 @@ import { useDispatch } from "react-redux";
 import { HomeContainer } from "./HomeStyles";
 
 export function Home(props) {
+  const [filterFlag, setFilterFlag] = useState(false);
 
-    const [filterFlag, setFilterFlag] = useState(false);
+  //resetea filters y orders al cambiar pags.
+  const [resetMenuFlag, setResetMenuFlag] = useState(false);
 
-    //resetea filters y orders al cambiar pags.
-    const [resetMenuFlag, setResetMenuFlag] = useState(false);
+  //guarda la data buscada
+  const [searchData, setSearchData] = useState({});
 
-    //guarda la data buscada
-    const [searchData, setSearchData] = useState({});
+  //avisa que se esta haciendo una busqueda
+  const [searchFlag, setSearchFlag] = useState(false);
 
-    //avisa que se esta haciendo una busqueda
-    const [searchFlag, setSearchFlag] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getTypes(dispatch);
+  }, []);
 
-    const dispatch = useDispatch();
-    useEffect(() => {
-        getTypes(dispatch);
-    },[]);
+  const resetMenuFlagHandler = () => {
+    setResetMenuFlag(!resetMenuFlag);
+  };
 
-    const resetMenuFlagHandler = () => {
-        setResetMenuFlag(!resetMenuFlag);
-    };
+  const mappingFiltersHandler = () => {
+    setFilterFlag(true);
+  };
 
-    const mappingFiltersHandler = () => {
-        setFilterFlag(true);
-    };
+  const backHandler = () => {
+    setSearchData({});
+    setSearchFlag(false);
+  };
 
-    const backHandler = () => {
-        setSearchData({});
-        setSearchFlag(false);
-    };
-
-    async function onSearch(poke, cardClick) {
-        if (cardClick) {
-            console.log(poke)
-            const pokeObj = props.orderFilterPoke.find(
-                (obj) => obj.nombre.toLowerCase() === poke
-            );
-            console.log(pokeObj)
-            setSearchData(pokeObj);
-            console.log("card Clicked, showing details of " + pokeObj.nombre);
-            setSearchFlag(true);
-            return;
-        }
-
-        const dataType = typeof poke;
-        console.log("on searh: " + dataType);
-        if (dataType === "string") {
-            try {
-                let { data } = await axios(`/pokemons?name=${poke}`);
-                console.log(data);
-                if (data) {
-                    setSearchData(data);
-                    setSearchFlag(true);
-                }
-            } catch (error) {
-                console.error(error);
-                window.alert("No se ha encontrado ningun Pokemon con ese nombre");
-            }
-
-            // useNavigate(`/detail/${searchData}`);
-        } else if (dataType === "number") {
-            try {
-                let { data } = await axios(`/pokemons/${poke}`);
-                if (data) {
-                    setSearchData(data);
-                    setSearchFlag(true);
-                }
-            } catch (error) {
-                console.error(error);
-                window.alert("No se ha encontrado ningun Pokemon con ese Id");
-            }
-
-            // useNavigate(`/detail/${searchData}`);
-        } else window.alert("No se ha encontrado ningun Pokemon");
+  async function onSearch(poke, cardClick) {
+    if (cardClick) {
+      console.log(poke);
+      const pokeObj = props.orderFilterPoke.find(
+        (obj) => obj.nombre.toLowerCase() === poke
+      );
+      console.log(pokeObj);
+      setSearchData(pokeObj);
+      console.log("card Clicked, showing details of " + pokeObj.nombre);
+      setSearchFlag(true);
+      return;
     }
 
-    function conditionalRendering() {
-        if (searchFlag)
-            return <Detail poke={searchData} backHandler={backHandler} />;
-        else {
-            return (
-                <>
-                    {" "}
-                    <PokeCards
-                        filterFlag={filterFlag}
-                        resetMenuFlagHandler={resetMenuFlagHandler}
-                        onSearch={onSearch}
-                    />
-                </>
-            );
+    const dataType = typeof poke;
+    console.log("on searh: " + dataType);
+    if (dataType === "string") {
+      try {
+        let { data } = await axios(`/pokemons?name=${poke}`);
+        console.log(data);
+        if (data) {
+          setSearchData(data);
+          setSearchFlag(true);
         }
-    }
+      } catch (error) {
+        console.error(error);
+        window.alert("No se ha encontrado ningun Pokemon con ese nombre");
+      }
 
-    return (
-        <div>
-            <HomeContainer>
-                <Nav onSearch={onSearch} />
-                <Paginador
-                        mappingFiltersHandler={mappingFiltersHandler}
-                        resetMenuFlag={resetMenuFlag}
-                    />
+      // useNavigate(`/detail/${searchData}`);
+    } else if (dataType === "number") {
+      try {
+        let { data } = await axios(`/pokemons/${poke}`);
+        if (data) {
+          setSearchData(data);
+          setSearchFlag(true);
+        }
+      } catch (error) {
+        console.error(error);
+        window.alert("No se ha encontrado ningun Pokemon con ese Id");
+      }
 
-                {conditionalRendering()}
-            </HomeContainer>
-        </div>
-    );
+      // useNavigate(`/detail/${searchData}`);
+    } else window.alert("No se ha encontrado ningun Pokemon");
+  }
+
+  return (
+    <main className=' h-screen flex flex-col justify-between content-between p-2 bg-red-500'>
+      <Nav
+        onSearch={onSearch}
+        mappingFiltersHandler={mappingFiltersHandler}
+        resetMenuFlag={resetMenuFlag}
+      />
+
+      <section className='w-full h-full bg-white rounded-md overflow-hidden'>
+        {searchFlag ? (
+          <Detail poke={searchData} backHandler={backHandler} />
+        ) : (
+          <PokeCards
+            filterFlag={filterFlag}
+            resetMenuFlagHandler={resetMenuFlagHandler}
+            onSearch={onSearch}
+          />
+        )}
+      </section>
+    </main>
+  );
 }
 
 export const mapStateToProps = (state) => {
-    return {
-        pokePage: state.pokePage,
-        createdPoke: state.createdPoke,
-        types: state.types,
-        orderFilterPoke: state.orderFilterPoke,
-    };
+  return {
+    pokePage: state.pokePage,
+    createdPoke: state.createdPoke,
+    types: state.types,
+    orderFilterPoke: state.orderFilterPoke,
+  };
 };
 
 export const mapDispatchToProps = {
-    getPokePage,
-    getTypes,
+  getPokePage,
+  getTypes,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
